@@ -1,139 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>다양한 언어로 간단한 게임 만들기</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f2f2f2;
-        }
-        header {
-            background-color: #b4d1a8;
-            color: #fff;
-            text-align: center;
-            padding: 1rem;
-        }
-        nav {
-            display: flex;
-            justify-content: center;
-            background-color: #689f81;
-            padding: 0.5rem;
-        }
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            margin: 0 1rem;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        nav a:hover {
-            background-color: #629077;
-        }
-        .container {
-            max-width: 960px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        footer {
-            text-align: center;
-            padding: 1rem;
-            background-color: #689f81;
-            color: #fff;
-        }
-        /* 이전 슬라이드/다음 슬라이드 버튼 스타일링 */
-        .prev, .next {
-            cursor: pointer;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            padding: 10px;
-            color: white;
-            font-size: 24px;
-            transition: background-color 0.3s;
-        }
-        .prev:hover, .next:hover {
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-        .prev {
-            left: 0;
-        }
-        .next {
-            right: 0;
-        }
-        /* 이미지 슬라이더 컨테이너 스타일링 */
-        .slider-container {
-            position: relative;
-            max-width: 1000px;
-            margin: 0 auto;
-            overflow: hidden;
-        }
-        .slider-content {
-            display: flex;
-            width: 500%;
-            transition: transform 0.5s ease-in-out;
-        }
-        .slider-item {
-            flex: 20%;
-            min-width: 100%;
-            height: 300px;
-            background-size: cover; /* 이미지 크기 조절 */
-            background-repeat: no-repeat;
-            background-position: center;
-        }
-    </style>
-    <script>
-        let currentSlide = 0;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>게임 자료 블로그</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+  }
 
-        function showSlide(n) {
-            const slides = document.querySelectorAll('.slider-item');
-            if (n < 0) currentSlide = slides.length - 1;
-            if (n >= slides.length) currentSlide = 0;
-            const shift = currentSlide * -20; // 이미지 슬라이더를 20%만큼 이동
-            document.querySelector('.slider-content').style.transform = `translateX(${shift}%)`;
-        }
+  header {
+    background-color: #008CBA;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
 
-        function prevSlide() {
-            showSlide(currentSlide - 1);
-        }
+  nav {
+    background-color: #005A70;
+    text-align: center;
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
 
-        function nextSlide() {
-            showSlide(currentSlide + 1);
-        }
-    </script>
+  nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 18px;
+    transition: color 0.3s;
+  }
+
+  nav a:hover {
+    color: #f5f5f5;
+  }
+
+  .category {
+    background-color: #1E90FF;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .category h2 {
+    margin: 0;
+    font-size: 24px;
+  }
+
+  .post {
+    background-color: white;
+    padding: 20px;
+    margin: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  footer {
+    background-color: #008CBA;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  }
+</style>
 </head>
 <body>
-    <header>
-        <h1>다양한 언어로 간단한 게임 만들기</h1>
-        <p>HTML, CSS, JavaScript를 활용한 게임 프로그래밍 예시</p>
-    </header>
-    <nav>
-        <a href="#">홈</a>
-        <a href="#">게임 예시</a>
-        <a href="#">게임 개발 팁</a>
-        <a href="#">언어별 특징</a>
-        <a href="#">문의하기</a>
-    </nav>
-    <div class="container">
-        <h2>최신 게임 예시</h2>
-        <div class="slider-container">
-            <div class="slider-content">
-                <div class="slider-item" style="background-image: url('Iamge/사진1.png');"></div>
-                <div class="slider-item" style="background-image: url('Iamge/사진2.png');"></div>
-                <div class="slider-item" style="background-image: url('Iamge/사진3.png');"></div>
-                <div class="slider-item" style="background-image: url('Iamge/사진4.png');"></div>
-                <div class="slider-item" style="background-image: url('Iamge/사진5.png');"></div>
-            </div>
-            <div class="prev" onclick="prevSlide()">&#10094;</div>
-            <div class="next" onclick="nextSlide()">&#10095;</div>
-        </div>
-    </div>
-    <footer>
-        <p>&copy; 2023 다양한 언어 게임 블로그. All rights reserved.</p>
-    </footer>
+  <header>
+    <h1>게임 자료 블로그</h1>
+  </header>
+  <nav>
+    <a href="#">홈</a>
+    <a href="#">소개</a>
+    <a href="#">블로그</a>
+    <a href="#">연락</a>
+  </nav>
+  <div class="category">
+    <h2>게임 자료 카테고리</h2>
+  </div>
+  <div class="post">
+    <h3>게시물 제목</h3>
+    <p>이곳에 게시물 내용이 들어갑니다. 내용 내용 내용 내용 내용...</p>
+  </div>
+  <div class="post">
+    <h3>다른 게시물 제목</h3>
+    <p>이곳에 다른 게시물 내용이 들어갑니다. 내용 내용 내용 내용 내용...</p>
+  </div>
+  <!-- 다른 게시물들도 동일한 형식으로 추가 가능 -->
+  <footer>
+    &copy; 2023 게임 자료 블로그. All rights reserved.
+  </footer>
 </body>
 </html>

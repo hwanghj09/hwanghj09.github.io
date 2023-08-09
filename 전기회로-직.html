@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>직렬 연결된 전구 회로</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .bulb {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #dddddd;
+            position: absolute;
+            margin: 10px;
+        }
+
+        .switch {
+            cursor: pointer;
+            font-weight: bold;
+            border: 1px solid black;
+            padding: 5px;
+            display: inline-block;
+            margin-top: 20px;
+            position: absolute;
+            top: 300px;
+            left: 500px;
+        }
+
+        .wire {
+            fill: none;
+            stroke: black;
+            stroke-width: 10px;
+        }
+
+        .cutButton {
+            cursor: pointer;
+            font-weight: bold;
+            border: 1px solid black;
+            padding: 5px;
+            display: inline-block;
+            margin-top: 20px;
+            position: absolute;
+            top: 300px;
+            left: 650px;
+        }
+
+        .cutLine {
+            fill: none;
+            stroke: white;
+            stroke-width: 10px;
+        }
+
+        /* 추가: pointer-events 속성으로 클릭 이벤트 허용하지 않음 */
+        #cutLayer {
+            pointer-events: none;
+        }
+
+        /* 추가: 화살표에 포인터를 올렸을 때 커서 스타일 변경 */
+        .arrow:hover {
+            cursor: pointer;
+            transform: scale(1.05);
+        }
+        .cutButton:hover {
+            cursor: pointer;
+            transform: scale(1.1);
+        }
+        .switch:hover {
+            cursor: pointer;
+            transform: scale(1.1);
+        }
+        .backButton {
+            cursor: pointer;
+            font-weight: bold;
+            border: 1px solid black;
+            padding: 5px;
+            display: inline-block;
+            position: absolute;
+            top: calc(50% - 15px); /* 세로 가운데 정렬 */
+            left: calc(50% - 75px); /* 가로 가운데 정렬 */
+            transition: transform 0.2s;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            text-align: center;
+            width: 150px;
+        }
+        .backButton:hover {
+            transform: scale(1.05);
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <h1>직렬 연결된 전구 회로</h1>
+    <svg width="1000" height="500" style="position: absolute; top: 0; left: 0;">
+        <rect x="250" y="200" width="700" height="100" class="wire" />
+    </svg>
+
+    <div class="bulb" style="top: 170px; left: 500px;"></div>
+    <div class="bulb" style="top: 170px; left: 650px;"></div>
+
+    <div class="switch" onclick="toggleBulbs()">전류 흐르게하기</div>
+    <div class="cutButton" onclick="cutWire()">전선 자르기</div>
+    <svg width="500" height="500" style="position: absolute; top: -50; left: 0;" id="cutLayer">
+    </svg>
+    <div class="backButton" onclick="goToSIndex()">s-index로 돌아가기</div>
+    <svg width="100" height="100" style="position: absolute; top: calc(50% - 50px); right: 10px;" onclick="goToParallelCircuit()">
+        <polygon class="arrow" points="0,20 50,50 0,80" />
+    </svg>
+    <script>
+        // 전구 상태 저장 변수
+        let bulbsOn = false;
+        let wireCut = false;
+        let wireConnected = false;
+        let bulbsConnected = false;
+
+        // 스위치를 누르면 전구를 켜고 끄는 함수
+        function toggleBulbs() {
+            const bulbs = document.querySelectorAll('.bulb');
+
+            if (bulbsOn) {
+                bulbs[0].style.backgroundColor = '#dddddd';
+                bulbs[1].style.backgroundColor = '#dddddd';
+            } else if(!bulbsOn && !wireCut){
+                bulbs[0].style.backgroundColor = 'yellow';
+                bulbs[1].style.backgroundColor = 'yellow';
+            }
+
+            bulbsOn = !bulbsOn;
+            if (bulbsConnected) {
+                bulbsConnected = false;
+                document.querySelector('.switch').innerText = '전류 흐르게하기';
+            } else {
+                bulbsConnected = true;
+                document.querySelector('.switch').innerText = '전류 멈추기';
+            }
+        }
+
+        // 전선 자르기 버튼을 누르면 흰색 사각형을 생성하거나 제거하는 함수
+        function cutWire() {
+            const cutLayer = document.getElementById('cutLayer');
+            const bulbs = document.querySelectorAll('.bulb');
+            if (wireCut) {
+                cutLayer.innerHTML = ''; // 기존에 생성된 흰색 사각형 제거
+                
+            } else {
+                const cutRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                cutRect.setAttribute('x', '475');
+                cutRect.setAttribute('y', '225');
+                cutRect.setAttribute('width', '50');
+                cutRect.setAttribute('height', '50');
+                cutRect.setAttribute('class', 'cutLine');
+                cutLayer.appendChild(cutRect);
+                bulbs[0].style.backgroundColor = '#dddddd';
+                bulbs[1].style.backgroundColor = '#dddddd';
+            }
+
+            wireCut = !wireCut;
+            if (wireConnected) {
+                wireConnected = false;
+                document.querySelector('.cutButton').innerText = '전선 자르기';
+            } else {
+                wireConnected = true;
+                document.querySelector('.cutButton').innerText = '전선 이어주기';
+            }
+        }
+
+        // 병렬 회로 페이지로 이동하는 함수
+        function goToParallelCircuit() {
+            window.location.href = '전기회로-병.html'; // 병렬 회로 페이지 경로로 수정해주세요.
+        }
+        function goToSIndex()
+        {
+            window.location.href = 's-index.html';
+        }
+    </script>
+</body>
+</html>

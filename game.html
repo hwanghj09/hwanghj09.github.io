@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jumping Circle with Gravity</title>
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background-color: skyblue;
+  }
+  canvas {
+    display: block;
+  }
+</style>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5627293747027982"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+<canvas id="myCanvas"></canvas>
+<script>
+const canvas = document.getElementById("myCanvas");
+const ctx = canvas.getContext("2d");
+
+const circle = {
+  x: canvas.width / 2,
+  y: canvas.height - 130,
+  radius: 30,
+  speedX: 0,
+  speedY: 0,
+  gravity: 0.5,
+  isJumping: false,
+};
+
+const obstacles = [];
+
+function drawCircle() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawGround();
+  ctx.beginPath();
+  ctx.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2);
+  ctx.fillStyle = "black";
+  ctx.fill();
+  ctx.closePath();
+}
+
+function drawObstacles() {
+  ctx.fillStyle = "red";
+  obstacles.forEach((obstacle, index) => {
+    if (!obstacle.clicked) {
+      ctx.beginPath();
+      ctx.arc(obstacle.x, obstacle.y, obstacle.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.closePath();
+    } else {
+      obstacles.splice(index, 1); // 클릭된 돌덩이 제거
+    }
+  });
+}
+
+function drawGround() {
+  ctx.fillStyle = "green";
+  ctx.fillRect(0, canvas.height - 100, canvas.width, 100);
+}
+
+function update() {
+  if ((keys.ArrowUp || mouseClicked()) && !circle.isJumping) {
+    circle.speedY = -12;
+    circle.isJumping = true;
+  }
+  if (keys.ArrowLeft) circle.speedX = -5;
+  if (keys.ArrowRight) circle.speedX = 5;
+
+  circle.speedY += circle.gravity;
+  if (circle.y + circle.radius >= canvas.height - 100) {
+    circle.y = canvas.height - 100 - circle.radius;
+    circle.speedY -= 2;
+    circle.isJumping = false;
+  }
+
+  circle.x += circle.speedX;
+  circle.y += circle.speedY;
+
+  if (circle.x - circle.radius < 0) circle.x = circle.radius;
+  if (circle.x + circle.radius > canvas.width) circle.x = canvas.width - circle.radius;
+  if (circle.y - circle.radius < 0) circle.y = circle.radius;
+
+  drawCircle();
+
+  obstacles.forEach(obstacle => {
+    obstacle.y += obstacle.speedY;
+    if (obstacle.y + obstacle.radius >= canvas.height - 100) {
+      obstacle.y = canvas.height - 100 - obstacle.radius;
+      obstacle.speedY = 0;
+    }
+    if (isColliding(circle, obstacle)) {
+      setTimeout(() => {
+        window.location.reload();
+      }, 10); // 1초 후 화면 리로드
+    }
+  });
+
+  drawObstacles();
+}
+
+function mouseClicked() {
+  return keys.MouseClick === true;
+}
+
+function isColliding(player, object) {
+  const distance = Math.sqrt((player.x - object.x) ** 2 + (player.y - object.y) ** 2);
+  return distance < player.radius + object.radius;
+}
+
+const keys = {};
+window.addEventListener("keydown", (e) => {
+  keys[e.key] = true;
+  if (e.key === " ") {
+    e.preventDefault();
+  }
+});
+window.addEventListener("keyup", (e) => {
+  keys[e.key] = false;
+  if (!keys.ArrowLeft && !keys.ArrowRight) {
+    circle.speedX = 0;
+  }
+});
+
+canvas.addEventListener("mousedown", event => {
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = event.clientX - rect.left;
+  const mouseY = event.clientY - rect.top;
+  
+  obstacles.forEach(obstacle => {
+    const distance = Math.sqrt((mouseX - obstacle.x) ** 2 + (mouseY - obstacle.y) ** 2);
+    if (distance < obstacle.radius) {
+      obstacle.clicked = true;
+    }
+  });
+});
+
+function gameLoop() {
+  update();
+  requestAnimationFrame(gameLoop);
+}
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+function spawnObstacle() {
+  const radius = Math.random(1000,2000) * 20 + 10;
+  const x = Math.random() * (canvas.width - radius * 2) + radius;
+  const y = -radius;
+  const speedY = Math.random(1000,2000) * 10 + 1 + obstacles.length;
+  obstacles.push({ x, y, radius, speedY, clicked: false });
+  setTimeout(spawnObstacle, Math.random(1000,1500) * 1500);
+}
+
+spawnObstacle();
+gameLoop();
+</script>
+</body>
+</html>

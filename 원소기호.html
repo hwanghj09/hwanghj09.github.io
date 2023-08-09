@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>원소기호</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-size: 22px;
+      font-weight: bold;
+    }
+    input {
+      padding: 10px;
+      font-size: 18px;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    .circle {
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      background-color: #f1f1f1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .button {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #9ec6b1;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5627293747027982"
+  crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="element-symbol" class="circle"></div>
+
+  <input type="text" id="element-input" placeholder="원소 기호를 입력하세요">
+
+  <button class="button" onclick="goToMain()">돌아가기</button>
+
+  <script>
+    const inputElement = document.getElementById('element-input');
+    const symbolElement = document.getElementById('element-symbol');
+
+    inputElement.addEventListener('input', () => {
+      const symbol = inputElement.value;
+      const elementName = getElementName(symbol);
+      symbolElement.innerText = elementName;
+    });
+
+    function getElementName(symbol) {
+      const elements = {
+        H: '수소',
+        He: '헬륨',
+        Li: '리튬',
+        Be: '베릴륨',
+        B: '붕소',
+        C: '탄소',
+        N: '질소',
+        O: '산소',
+        F: '플루오린',
+        Ne: '네온',
+        Na: '나트륨',
+        Mg: '마그네슘',
+        Al: '알루미늄',
+        Si: '규소',
+        P: '인',
+        S: '황',
+        Cl: '염소',
+        Ar: '아르곤',
+        K: '칼륨',
+        Ca: '칼슘'
+      };
+
+      return elements[symbol] || '아직 추가되지 않은\n 원소거나\n 없는 원소입니다';
+    }
+
+    function goToMain() {
+      window.location.href = 's-index.html';
+    }
+  </script>
+</body>
+</html>

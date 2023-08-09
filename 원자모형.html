@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>원자 모형</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+
+    canvas {
+      border: 1px solid #ccc;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .element-info {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #9ec6b1;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5627293747027982"
+  crossorigin="anonymous"></script>
+</head>
+<body>
+  <div>
+    <canvas id="canvas" width="400" height="300"></canvas>
+    <input type="number" id="input-number" placeholder="원자번호를 입력하세요" min="1" max="20">
+    <div id="element-info" class="element-info"></div>
+    <button class="button" onclick="goToMain()">돌아가기</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const inputNumber = document.getElementById('input-number');
+    const elementInfo = document.getElementById('element-info');
+
+    const elementData = {
+      1: { symbol: 'H', name: 'Hydrogen' },
+      2: { symbol: 'He', name: 'Helium' },
+      3: { symbol: 'Li', name: 'Lithium' },
+      4: { symbol: 'Be', name: 'Beryllium' },
+      5: { symbol: 'B', name: 'Boron' },
+      6: { symbol: 'C', name: 'Carbon' },
+      7: { symbol: 'N', name: 'Nitrogen' },
+      8: { symbol: 'O', name: 'Oxygen' },
+      9: { symbol: 'F', name: 'Fluorine' },
+      10: { symbol: 'Ne', name: 'Neon' },
+      11: { symbol: 'Na', name: 'Sodium' },
+      12: { symbol: 'Mg', name: 'Magnesium' },
+      13: { symbol: 'Al', name: 'Aluminum' },
+      14: { symbol: 'Si', name: 'Silicon' },
+      15: { symbol: 'P', name: 'Phosphorus' },
+      16: { symbol: 'S', name: 'Sulfur' },
+      17: { symbol: 'Cl', name: 'Chlorine' },
+      18: { symbol: 'Ar', name: 'Argon' },
+      19: { symbol: 'K', name: 'Potassium' },
+      20: { symbol: 'Ca', name: 'Calcium' }
+    };
+
+    function drawAtomicModel() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const nucleusRadius = 10;
+      const electronRadius = 5;
+      const electronDistance = 50;
+
+      const atomicNumber = Number(inputNumber.value);
+
+      // Draw atomic model based on atomic number
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, nucleusRadius, 0, 2 * Math.PI);
+      ctx.fillStyle = 'black';
+      ctx.fill();
+
+      if (atomicNumber >= 1 && atomicNumber <= 20) {
+        for (let i = 0; i < atomicNumber; i++) {
+          const angle = (2 * Math.PI * i) / atomicNumber;
+          const electronX = centerX + Math.cos(angle) * electronDistance;
+          const electronY = centerY + Math.sin(angle) * electronDistance;
+
+          ctx.beginPath();
+          ctx.arc(electronX, electronY, electronRadius, 0, 2 * Math.PI);
+          ctx.fillStyle = 'blue';
+          ctx.fill();
+        }
+
+        const elementSymbol = elementData[atomicNumber].symbol;
+        const elementName = elementData[atomicNumber].name;
+        elementInfo.textContent = `${elementSymbol} - ${elementName}`;
+      } else {
+        elementInfo.textContent = '';
+      }
+    }
+
+    function goToMain() {
+      window.location.href = 's-index.html';
+    }
+
+    inputNumber.addEventListener('input', drawAtomicModel);
+  </script>
+</body>
+</html>

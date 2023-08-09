@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  
+  <title>메인</title>
+  <style>
+    body {
+      background-color: transparent;
+      background-image: url("배경화면.png");
+      background-repeat: no-repeat;
+      background-size: cover;
+      opacity: 0;
+      animation: fadeIn 1.5s ease-in-out forwards;
+    }
+    .button-container {
+      position: absolute;
+      left: 100px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .button {
+      display: block;
+      width: 200px;
+      height: 30px;
+      margin-bottom: 45px;
+      text-align: center;
+      background-color: #ffc9f2;
+      color: rgb(255, 255, 255);
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      opacity: 0;
+      animation: fadeIn 1.3s ease-in-out forwards;
+      transform: scale(2);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .button:hover {
+      transform: scale(2.05);
+      box-shadow: 0 0 1px 2px rgb(0, 0, 0);
+    }
+    
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+  </style>
+  <script>
+    // 모바일 기기 감지 함수
+    function detectMobileDevice() {
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isMobile = /iphone|ipad|ipod|android/.test(userAgent);
+      if (isMobile) {
+        // 모바일로 접속한 경우
+        window.location.href = 's-index-m.html';
+      }
+    }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5627293747027982"
+  crossorigin="anonymous"></script>
+</head>
+<body onload="detectMobileDevice()">
+  <div class="button-container">
+    <button class="button" onclick="location.href='물질의구성.html'">물질의 구성</button>
+    <button class="button" onclick="location.href='전기와 자기.html'">전기와 자기</button>
+    <button class="button">태양계</button>
+    <button class="button">식물과 에너지</button>
+    <button class="button">동물과 에너지</button>
+    <button class="button">물질의 특성</button>
+    <button class="button">수권과 해수의 순환</button>
+    <button class="button">열과 우리 생활</button>
+  </div>
+</body>
+</html>

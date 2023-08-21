@@ -244,6 +244,28 @@
     transform: translate(-50%, -50%);
   }
 
+  .uranus-draw {
+    background-color: #66ccff;
+    width: 250px;
+    height: 250px;
+    background-color: #ffcc66;
+    position: absolute;
+    top: 30%;
+    border-radius: 50%;
+    left: 2%;
+  }
+
+  .neptune-draw {
+    background-color: #3333cc;
+    width: 250px;
+    height: 250px;
+    background-color: #ffcc66;
+    position: absolute;
+    top: 30%;
+    border-radius: 50%;
+    left: 2%;
+  }
+
   .expaint-text {
     align-items: center;
     margin-left: 20px;
@@ -344,6 +366,25 @@
   </div>
 </div>
 
+<div class="uranus-expaint">
+  <div class="uranus-draw"></div>
+  <div class="uranus-text">
+    <center><h2>천왕성</h2></center>
+    <span>&nbsp;1. 설명</span><br>
+    <span>&nbsp;2. 설명</span><br>
+    <span>&nbsp;3. 설명</span>
+  </div>
+</div>
+
+<div class="neptune-expaint">
+  <div class="neptune-draw"></div>
+  <div class="neptune-text">
+    <center><h2>해왕성</h2></center>
+    <span>&nbsp;1. 설명</span><br>
+    <span>&nbsp;2. 설명</span><br>
+    <span>&nbsp;3. 설명</span>
+  </div>
+</div>
 
 </div>
 <script>
@@ -356,13 +397,16 @@
   var venus_e = document.querySelector(".venus-expaint");
   var earth = document.querySelector(".earth");
   var earth_e = document.querySelector(".earth-expaint");
-
   var mars = document.querySelector(".mars");
   var mars_e = document.querySelector(".mars-expaint");
   var jupiter = document.querySelector(".jupiter");
   var jupiter_e = document.querySelector(".jupiter-expaint");
   var saturn = document.querySelector(".saturn");
   var saturn_e = document.querySelector(".saturn-expaint");
+  var uranus = document.querySelector(".uranus");
+  var uranus_e = document.querySelector(".uranus-expaint");
+  var neptune = document.querySelector(".neptune");
+  var neptune_e = document.querySelector(".neptune-expaint");
   function displaynone()
   {
     sun_e.style.display = 'none';
@@ -372,6 +416,8 @@
     mars_e.style.display = 'none';
     jupiter_e.style.display = 'none';
     saturn_e.style.display = 'none';
+    uranus_e.style.display = 'none';
+    neptune_e.style.display = 'none';
 
     explanation.style.display = 'none';
   }
@@ -404,6 +450,14 @@
   saturn.addEventListener("click", function() {
     explanation.style.display = 'block';
     saturn_e.style.display = 'block';
+  });
+  uranus.addEventListener("click", function() {
+    explanation.style.display = 'block';
+    uranus_e.style.display = 'block';
+  });
+  neptune.addEventListener("click", function() {
+    explanation.style.display = 'block';
+    neptune_e.style.display = 'block';
   });
 </script>
 </body>

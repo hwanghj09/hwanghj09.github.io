@@ -157,10 +157,105 @@
     height: 800px;
     background-color: #949494dd;
     position: absolute;
+    font-weight: bold;
+    font-size: 20px;
+    color: white;
+  }
+  .sun-draw {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 165, 0, 1) 0%, rgba(255, 0, 0, 1) 100%);
+    position: absolute;
+    top: 30%;
+    left: 2%;
 }
+  .mercury-draw {
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(139, 69, 19, 1) 0%, rgba(139, 69, 19, 1) 50%, rgba(0, 0, 0, 1) 100%);
+    position: absolute;
+    top: 30%;
+    border-radius: 50%;
+    left: 2%;
+  }
+
+  .venus-draw {
+    width: 250px;
+    height: 250px;
+    background-color: #ffcc66;
+    position: absolute;
+    top: 30%;
+    border-radius: 50%;
+    left: 2%;
+  }
+
+  .earth-draw {
+    background: radial-gradient(circle, rgba(0, 128, 255, 1) 0%, rgba(255, 255, 255, 1) 50%, rgba(0, 128, 0, 1) 100%);
+    width: 250px;
+    height: 250px;
+    background-color: #ffcc66;
+    position: absolute;
+    top: 30%;
+    border-radius: 50%;
+    left: 2%;
+  }
+
+  .mars-draw {
+    background: radial-gradient(circle, rgba(255, 0, 0, 1) 0%, rgba(139, 0, 0, 1) 100%);
+    width: 250px;
+    height: 250px;
+    background-color: #ffcc66;
+    position: absolute;
+    top: 30%;
+    border-radius: 50%;
+    left: 2%;
+  }
+
+  .jupiter-draw {
+    background-color: #ff9900;
+    width: 250px;
+    height: 250px;
+    background-color: #ffcc66;
+    position: absolute;
+    top: 30%;
+    border-radius: 50%;
+    left: 2%;
+  }
+
+  .saturn-draw {
+    background: radial-gradient(circle, rgba(255, 255, 0, 1) 0%, rgba(139, 69, 19, 1) 100%);
+    width: 250px;
+    height: 250px;
+    background-color: #ffcc66;
+    position: absolute;
+    top: 30%;
+    border-radius: 50%;
+    left: 2%;
+  }
+  .saturn-draw .ring {
+    width: 350px;
+    height: 50px;
+    background: linear-gradient(to right, rgba(139, 69, 19, 1) 0%, rgba(255, 255, 0, 1) 50%, rgba(139, 69, 19, 1) 100%);
+    border-radius: 50%;
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .expaint-text {
+    align-items: center;
+    margin-left: 20px;
+    color: white;
+    left: 40px;
+  }
+
+  
   
 </style>
 <title>Solar System</title>
+
 </head>
 <body>
 <div class="solar-system">
@@ -177,7 +272,139 @@
   <div class="planet neptune"><span>해왕성</span></div>
 </div>
 <div class="planet-explanation">
-    <div class="sun"></div>
+  <button onclick="displaynone();">X</button>
+
+  <div class="sun-expaint">
+    <div class="sun-draw"></div>
+    <div class="expaint-text">
+      <center><h2>태양</h2></center>
+      <span>&nbsp;1. 태양계에서 스스로 빛을 내는 유일한 천체이다</span><br>
+      <span>&nbsp;2. 많은 양의 에너지를 우주 공간으로 내보낸다.</span><br>
+      <span>&nbsp;3. 태양계를 이루는 행성 등의 천체에게 영향을 준다.</span>
+    </div>
+  </div>
+
+  <div class="mercury-expaint">
+    <div class="mercury-draw"></div>
+    <div class="expaint-text">
+      <center><h2>수성</h2></center>
+      <span>&nbsp;1. 설명</span><br>
+      <span>&nbsp;2. 설명</span><br>
+      <span>&nbsp;3. 설명</span>
+    </div>
+  </div>
+
+<div class="venus-expaint">
+  <div class="venus-draw"></div>
+  <div class="venus-text">
+    <center><h2>금성</h2></center>
+    <span>&nbsp;1. 설명</span><br>
+    <span>&nbsp;2. 설명</span><br>
+    <span>&nbsp;3. 설명</span>
+  </div>
 </div>
+
+<div class="earth-expaint">
+  <div class="earth-draw"></div>
+  <div class="earth-text">
+    <center><h2>지구</h2></center>
+    <span>&nbsp;1. 설명</span><br>
+    <span>&nbsp;2. 설명</span><br>
+    <span>&nbsp;3. 설명</span>
+  </div>
+</div>
+
+<div class="mars-expaint">
+  <div class="mars-draw"></div>
+  <div class="mars-text">
+    <center><h2>화성</h2></center>
+    <span>&nbsp;1. 설명</span><br>
+    <span>&nbsp;2. 설명</span><br>
+    <span>&nbsp;3. 설명</span>
+  </div>
+</div>
+
+<div class="jupiter-expaint">
+  <div class="jupiter-draw"></div>
+  <div class="jupiter-text">
+    <center><h2>목성</h2></center>
+    <span>&nbsp;1. 설명</span><br>
+    <span>&nbsp;2. 설명</span><br>
+    <span>&nbsp;3. 설명</span>
+  </div>
+</div>
+
+<div class="saturn-expaint">
+  <div class="saturn-draw"><div class="ring"></div></div>
+  <div class="saturn-text">
+    <center><h2>토성</h2></center>
+    <span>&nbsp;1. 설명</span><br>
+    <span>&nbsp;2. 설명</span><br>
+    <span>&nbsp;3. 설명</span>
+  </div>
+</div>
+
+
+</div>
+<script>
+  var explanation = document.querySelector(".planet-explanation");
+  var sun = document.querySelector(".sun");
+  var sun_e = document.querySelector(".sun-expaint");
+  var mercury = document.querySelector(".mercury");
+  var mercury_e = document.querySelector(".mercury-expaint");
+  var venus = document.querySelector(".venus");
+  var venus_e = document.querySelector(".venus-expaint");
+  var earth = document.querySelector(".earth");
+  var earth_e = document.querySelector(".earth-expaint");
+
+  var mars = document.querySelector(".mars");
+  var mars_e = document.querySelector(".mars-expaint");
+  var jupiter = document.querySelector(".jupiter");
+  var jupiter_e = document.querySelector(".jupiter-expaint");
+  var saturn = document.querySelector(".saturn");
+  var saturn_e = document.querySelector(".saturn-expaint");
+  function displaynone()
+  {
+    sun_e.style.display = 'none';
+    mercury_e.style.display = 'none';
+    venus_e.style.display = 'none';
+    earth_e.style.display = 'none';
+    mars_e.style.display = 'none';
+    jupiter_e.style.display = 'none';
+    saturn_e.style.display = 'none';
+
+    explanation.style.display = 'none';
+  }
+  displaynone();
+  sun.addEventListener("click", function() {
+    explanation.style.display = 'block';
+    sun_e.style.display = 'block';
+  });
+  mercury.addEventListener("click", function() {
+    explanation.style.display = 'block';
+    mercury_e.style.display = 'block';
+  });
+  venus.addEventListener("click", function() {
+    explanation.style.display = 'block';
+    venus_e.style.display = 'block';
+  });
+  earth.addEventListener("click", function() {
+    explanation.style.display = 'block';
+    earth_e.style.display = 'block';
+  });
+
+  mars.addEventListener("click", function() {
+    explanation.style.display = 'block';
+    mars_e.style.display = 'block';
+  });
+  jupiter.addEventListener("click", function() {
+    explanation.style.display = 'block';
+    jupiter_e.style.display = 'block';
+  });
+  saturn.addEventListener("click", function() {
+    explanation.style.display = 'block';
+    saturn_e.style.display = 'block';
+  });
+</script>
 </body>
 </html>

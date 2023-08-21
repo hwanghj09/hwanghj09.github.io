@@ -270,7 +270,17 @@
     color: white;
     left: 40px;
   }
-
+  .button {
+    position: absolute;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #9ec6b1;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      top: 80%;
+    }
   
   
 </style>
@@ -385,6 +395,7 @@
 </div>
 
 </div>
+<button class="button" onclick="goToMain()">돌아가기</button>
 <script>
   var explanation = document.querySelector(".planet-explanation");
   var sun = document.querySelector(".sun");
@@ -457,6 +468,10 @@
     explanation.style.display = 'block';
     neptune_e.style.display = 'block';
   });
+
+  function goToMain() {
+      window.location.href = 'index.html';
+    }
 </script>
 </body>
 </html>

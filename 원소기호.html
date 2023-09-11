@@ -44,7 +44,7 @@
   crossorigin="anonymous"></script>
 </head>
 <body>
-  <div id="element-symbol" class="circle"></div>
+  <div id="element-symbol" class="circle" style="text-align: center;"></div>
 
   <input type="text" id="element-input" placeholder="원소 기호를 입력하세요">
 
@@ -62,26 +62,26 @@
 
     function getElementName(symbol) {
       const elements = {
-        H: '수소',
-        He: '헬륨',
-        Li: '리튬',
-        Be: '베릴륨',
-        B: '붕소',
-        C: '탄소',
-        N: '질소',
-        O: '산소',
-        F: '플루오린',
-        Ne: '네온',
-        Na: '나트륨',
-        Mg: '마그네슘',
-        Al: '알루미늄',
-        Si: '규소',
-        P: '인',
-        S: '황',
-        Cl: '염소',
-        Ar: '아르곤',
-        K: '칼륨',
-        Ca: '칼슘'
+        H: '수소\nHydrogen',
+        He: '헬륨\nHelium',
+        Li: '리튬\nLithium',
+        Be: '베릴륨\nBeryllium',
+        B: '붕소\nBoron',
+        C: '탄소\nCarbon',
+        N: '질소\nNitrogen',
+        O: '산소\nOxygen',
+        F: '플루오린\nFluorine',
+        Ne: '네온\nNeon',
+        Na: '나트륨\nSodium',
+        Mg: '마그네슘\nMagnesium',
+        Al: '알루미늄\nAluminum',
+        Si: '규소\nSilicon',
+        P: '인\nPhosphorus',
+        S: '황\nSulfur',
+        Cl: '염소\nChlorine',
+        Ar: '아르곤\nArgon',
+        K: '칼륨\nPotassium',
+        Ca: '칼슘\nCalcium'
       };
 
       return elements[symbol] || '아직 추가되지 않은\n 원소거나\n 없는 원소입니다';

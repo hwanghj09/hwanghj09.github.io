@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>랜덤 이름 표 생성</title>
     <style>
-        /* 스타일은 이전 코드와 동일하게 유지합니다. */
         table {
             border-collapse: collapse;
             margin: 20px auto; /* 가운데 정렬 */
-            width: 70%; /* 표의 너비를 더 크게 조절하세요. */
+            width: 40%; /* 표의 너비를 더 크게 조절하세요. */
         }
 
         th, td {
@@ -32,10 +31,12 @@
             border-radius: 5px;
             margin: 20px auto;
             display: block;
+            transition: transform 0.2s ease-in-out;
         }
 
         #generateButton:hover {
             background-color: #0056b3;
+            transform: scale(1.1);
         }
     </style>
 </head>
@@ -47,26 +48,12 @@
     </div>
 
     <script>
-        const names = []; // 빈 배열로 초기화
-
-        // 텍스트 파일을 읽어와서 names 배열에 데이터 추가하는 함수
-        function readTextFile(file) {
-            const rawFile = new XMLHttpRequest();
-            rawFile.open("GET", file, false);
-            rawFile.onreadystatechange = function () {
-                if (rawFile.readyState === 4) {
-                    if (rawFile.status === 200 || rawFile.status === 0) {
-                        const allText = rawFile.responseText;
-                        const lines = allText.split("\n");
-                        names.push(...lines); // 배열에 데이터 추가
-                    }
-                }
-            }
-            rawFile.send(null);
-        }
-
-        // 텍스트 파일 읽기
-        readTextFile("names.txt");
+        const names = [
+            "신가온", "김성윤", "김소정", "김시윤", "김담일", "김도연", "김도윤", "문승원", "박동현",
+            "박시우", "손지우", "신유림", "양석호", "윤수영", "이겸", "이시은", "이은서", "이주연", "이하람",
+            "정서윤", "조유진", "이주안", "황주하", "차정우", "하승연", "호날두", "박주하", "황하은",
+            "김정하", "황현준", "차정우", "장인하", "박시우"
+        ];
 
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {

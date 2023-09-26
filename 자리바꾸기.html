@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>랜덤 이름 표 생성</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin: 20px auto; /* 가운데 정렬 */
+        }
+
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="generateRandomTable()">표 생성</button>
+
+    <div id="tableContainer">
+        <!-- 표가 생성될 공간 -->
+    </div>
+
+    <script>
+        const names = [
+            "신가온", "김성윤", "김소정", "김시윤", "김담일", "김도연", "김도윤", "문승원", "박동현",
+            "박시우", "손지우", "신유림", "양석호", "윤수영", "이겸", "이시은", "이은서", "이주연", "이하람",
+            "정서윤", "조유진", "이주안", "황주하", "차정우", "하승연", "이한결", "박주하", "황하은",
+            "김정하", "황현준", "차정우", "장인하", "박시우"
+        ];
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function generateRandomTable() {
+            const shuffledNames = [...names];
+            shuffleArray(shuffledNames);
+
+            const tableContainer = document.getElementById('tableContainer');
+            tableContainer.innerHTML = ''; // 기존 표 제거
+
+            const table = document.createElement('table');
+            const numRows = 5; // 행 수를 조절하세요.
+            const numCols = 8; // 열 수를 조절하세요.
+            let currentIndex = 0;
+
+            for (let row = 0; row < numRows; row++) {
+                const tr = document.createElement('tr');
+                for (let col = 0; col < numCols; col++) {
+                    const td = document.createElement('td');
+                    if (currentIndex < shuffledNames.length) {
+                        td.textContent = shuffledNames[currentIndex];
+                        currentIndex++;
+                    }
+                    tr.appendChild(td);
+                }
+                table.appendChild(tr);
+            }
+
+            tableContainer.appendChild(table);
+        }
+    </script>
+</body>
+</html>

@@ -40,6 +40,54 @@
       transform: scale(2.05);
       box-shadow: 0 0 1px 2px rgb(0, 0, 0);
     }
+    .sidebutton
+    {
+        display: block;
+        width: 30px;
+        height: 30px;
+        margin-bottom: 45px;
+        text-align: center;
+        background-color: #ffc9f2;
+        color: rgb(255, 255, 255);
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        opacity: 0;
+        animation: fadeIn 1.3s ease-in-out forwards;
+        transform: scale(2);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .sidebutton:hover {
+      transform: scale(2.05);
+      box-shadow: 0 0 1px 2px rgb(0, 0, 0);
+    }
+    
+    .sidebar-button {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 999;
+    }
+    
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100%;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      transition: right 0.3s;
+    }
+    
+    .sidebar.open {
+      right: 0;
+    }
+    
+    .sidebar-content {
+      padding: 20px;
+    }
     
     @keyframes fadeIn {
       0% { opacity: 0; }
@@ -56,6 +104,14 @@
         window.location.href = 'index-m.html';
       }
     }
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      sidebar.classList.toggle('open');
+    }
+    function gotosetchange()
+    {
+        window.location.href="자리바꾸기.html";
+    }
   </script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5627293747027982"
   crossorigin="anonymous"></script>
@@ -70,6 +126,16 @@
     <button class="button">물질의 특성</button>
     <button class="button">수권과 해수의 순환</button>
     <button class="button">열과 우리 생활</button>
+  </div>
+
+  <div class="sidebar-button">
+    <button class="sidebutton" onclick="toggleSidebar()">≡</button>
+  </div>
+  
+  <div class="sidebar">
+    <div class="sidebar-content">
+      <div onclick="gotosetchange()">■ 자리 바꾸기</div>
+    </div>
   </div>
 </body>
 </html>

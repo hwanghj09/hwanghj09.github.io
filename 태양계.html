@@ -271,19 +271,21 @@
     left: 40px;
   }
   .button {
-      padding: 10px 20px;
-      font-size: 18px;  
-      background-color: #9ec6b1;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    .button:hover
-    {
-      transform: scale(1.05);
-    }
+    padding: 10px 20px;
+    font-size: 18px;  
+    background-color: #9ec6b1;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    position: absolute;
+    top: 80%;
+  }
+  .button:hover
+  {
+    transform: scale(1.05);
+  }
   
   
 </style>
@@ -424,6 +426,7 @@
   var uranus_e = document.querySelector(".uranus-expaint");
   var neptune = document.querySelector(".neptune");
   var neptune_e = document.querySelector(".neptune-expaint");
+  var button = document.querySelector(".button");
   function displaynone()
   {
     sun_e.style.display = 'none';
@@ -435,46 +438,55 @@
     saturn_e.style.display = 'none';
     uranus_e.style.display = 'none';
     neptune_e.style.display = 'none';
-
+    button.style.display='block';
     explanation.style.display = 'none';
   }
   displaynone();
   sun.addEventListener("click", function() {
     explanation.style.display = 'block';
     sun_e.style.display = 'block';
+    button.style.display='none';
   });
   mercury.addEventListener("click", function() {
     explanation.style.display = 'block';
     mercury_e.style.display = 'block';
+    button.style.display='none';
   });
   venus.addEventListener("click", function() {
     explanation.style.display = 'block';
     venus_e.style.display = 'block';
+    button.style.display='none';
   });
   earth.addEventListener("click", function() {
     explanation.style.display = 'block';
     earth_e.style.display = 'block';
+    button.style.display='none';
   });
 
   mars.addEventListener("click", function() {
     explanation.style.display = 'block';
     mars_e.style.display = 'block';
+    button.style.display='none';
   });
   jupiter.addEventListener("click", function() {
     explanation.style.display = 'block';
     jupiter_e.style.display = 'block';
+    button.style.display='none';
   });
   saturn.addEventListener("click", function() {
     explanation.style.display = 'block';
     saturn_e.style.display = 'block';
+    button.style.display='none';
   });
   uranus.addEventListener("click", function() {
     explanation.style.display = 'block';
     uranus_e.style.display = 'block';
+    button.style.display='none';
   });
   neptune.addEventListener("click", function() {
     explanation.style.display = 'block';
     neptune_e.style.display = 'block';
+    button.style.display='none';
   });
 
   function goToMain() {

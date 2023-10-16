@@ -3,50 +3,62 @@
 <head>
   <title>식물과 에너지</title>
   <style>
-    body {
-      margin: 0;
-      padding: 0;
+    body
+    {
+      background-color: rgb(200, 240, 253);
     }
-    .container {
-      display: flex;
-      height: 100vh;
+    .ground
+    {
+      position: absolute;
+      height: 400px;
+      width: 5000px;
+      background-color: peru;
+      top: 40%;
     }
-    .element-section,
-    .reaction-section,
-    .experiment-section {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-weight: bold;
-      transition: transform 0.3s, border-color 0.3s;
+    .plant-pillar
+    {
+      height: 200px;
+      width: 10px;
+      background-color: rgb(83, 208, 83);
+      position: absolute;
+      left: 50%;
+      top: 20%;
     }
-    .element-section:hover,
-    .reaction-section:hover,
-    .experiment-section:hover {
-      transform: scale(0.95);
-      border: 2px solid white;
+    .branch
+    {
+      height: 10px;
+      width: 80px;
+      background-color: rgb(83, 208, 83);
+      position: absolute;
+      top: 20%;
+      transform: rotate(-30deg);
     }
-    .element-section {
-      background-color: #f1f1f1;
-      cursor: pointer;
+    .plant-leaf
+    {
+      height: 70px;
+      width: 45px;
+      background-color: rgb(83, 208, 83);
+      top: 1%;
+      position: absolute;
+      transform: rotate(65deg);
+      left: 480%;
+      border-radius: 100px 10px 50px 50px
     }
-    .reaction-section {
-      background-color: #e1e1e1;
-    }
-    .experiment-section {
-      background-color: #d1d1d1;
+    .plant-root
+    {
+      position: absolute;
+      background-color: rgba(255, 51, 0, 0.49);
     }
   </style>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5627293747027982"
   crossorigin="anonymous"></script>
 </head>
 <body>
-  <div class="container">
-    <div class="element-section" onclick="location.href='#'">a</div>
-    <div class="reaction-section" onclick="location.href='#'">a</div>
-    <div class="experiment-section" onclick="location.href='#'">a</div>
+  <div class="ground"></div>
+  <div class="plant-pillar">
+    <div class="branch"></div>
+    <div class="plant-leaf"></div>
+    <div class="plant-root"></div>
   </div>
 </body>
 </html>

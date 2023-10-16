@@ -63,12 +63,32 @@
       transform: rotate(65deg);
       transition: transform 0.2s;
     }
-    .explanation
+    .p-explanation
     {
       width:300px;
       height: 300px;
       background-color: rgba(128, 128, 128, 0.709);
       position: absolute;
+      top: 13%;
+      left: 30%;
+    }
+    .r-explanation
+    {
+      width:300px;
+      height: 300px;
+      background-color: rgba(128, 128, 128, 0.709);
+      position: absolute;
+      top: 50%;
+      left: 35%;
+    }
+    .l-explanation
+    {
+      width:300px;
+      height: 300px;
+      background-color: rgba(128, 128, 128, 0.709);
+      position: absolute;
+      top: 10%;
+      left: 60%;
     }
     .button {
     padding: 10px 20px;
@@ -93,33 +113,33 @@
 </head>
 <body>
   <div class="ground"></div>
-  <div class=""></div>
-    <div class="plant-pillar">
-      <div class="explanation" style="top: -50%; left: -4000%;">
-        <button onclick="pillar_none();" style="position:absolute; background-color: #949494dd; font-size: 10px; margin: 20px; border: none; border-radius: 4px; cursor: pointer;">X</button>
-        <br><center><span>줄기</span></center>
-        <span>adsad</span>
+    <div class="plant-pillar"></div>
+    <div class="p-explanation">
+      <button onclick="pillar_none();" style="position:absolute; background-color: #949494dd; font-size: 20px; margin: 20px; border: none; border-radius: 4px; cursor: pointer; left: 250px;">X</button>
+      <br><center><span>줄기</span></center>
+      <span>adsad</span>
     </div>
-    </div>
+
     <div class="branch"></div>
-    <div class="plant-leaf">
-      <div class="explanation" style="transform: rotate(-65deg); top: -500%;">
-        <button onclick="leaf_none();" style="position:absolute; background-color: #949494dd; font-size: 10px; margin: 20px; border: none; border-radius: 4px; cursor: pointer;">X</button>
-        <br><center><span>잎</span></center>
-        <span>adsad</span>
-      </div>
+    <div class="plant-leaf"></div>
+    <div class="l-explanation">
+      <button onclick="leaf_none();" style="position:absolute; background-color: #949494dd; font-size: 20px; margin: 20px; border: none; border-radius: 4px; cursor: pointer; left: 250px;">X</button>
+      <br><center><span>잎</span></center>
+      <span>adsad</span>
     </div>
+
     <div class="root">
       <div class="plant-root"style="transform: rotate(-25deg); left: 50.5%; top: 40.8%;"></div>
       <div class="plant-root" style="transform: rotate(60deg); left: 48.5%; top: 39.8%;"></div>
       <div class="plant-root" style="transform: rotate(25deg); left: 49.5%; top: 40.8%;"></div>
       <div class="plant-root" style="transform: rotate(-58deg); left: 51.5%; top: 40.8%;"></div>
-      <div class="explanation" style="top: 50%; left: 30%;">
-        <button onclick="root_none();" style="position:absolute; background-color: #949494dd; font-size: 10px; margin: 20px; border: none; border-radius: 4px; cursor: pointer;">X</button>
-        <br><center><span>뿌리</span></center>
-        <span>adsad</span>
-      </div>
   </div>
+  <div class="r-explanation">
+    <button onclick="root_none();" style="position:absolute; background-color: #949494dd; font-size: 20px; margin: 20px; border: none; border-radius: 4px; cursor: pointer; left: 250px;">X</button>
+    <br><center><span>뿌리</span></center>
+    <span>adsad</span>
+  </div>
+
 </div>
 <button class="button" onclick="goToMain()">돌아가기</button>
 <div style="top: 350%; position: absolute;">식물 싫어</div>
@@ -128,44 +148,40 @@
   var leaf = document.querySelector(".plant-leaf");
   var pillar = document.querySelector(".plant-pillar");
   var root = document.querySelector(".root");
-  var leaf_e = document.querySelector(".plant-leaf .explanation");
-  var pillar_e = document.querySelector(".plant-pillar .explanation");
-  var root_e = document.querySelector(".root .explanation");
-  var button=document.querySelector(".button");
-  function displaynone()
-  {
-    leaf_e.style.display='none';
-    pillar_e.style.display='none';
-    root_e.style.display='none';
-    button.style.display='block';
-  }
-  displaynone();
+  var leaf_e = document.querySelector(".l-explanation");
+  var pillar_e = document.querySelector(".p-explanation");
+  var root_e = document.querySelector(".r-explanation");
+  leaf_none();
+  pillar_none();
+  root_none();
 
   function leaf_none()
   {
-    leaf_e.style.display='none';
+    leaf_e.style.display = 'none';
   }
   function pillar_none()
   {
-    pillar_e.style.display='none';
+    pillar_e.style.display = 'none';
   }
   function root_none()
   {
-    root_e.style.display='none';
+    root_e.style.display = 'none';
   }
-
+  
+  // Attach event listeners before calling the "none" functions
   leaf.addEventListener("click", function() {
-    leaf_e.style.display='block';
+    leaf_e.style.display = 'block';
   });
   pillar.addEventListener("click", function() {
-    pillar_e.style.display='block';
+    pillar_e.style.display = 'block';
   });
   root.addEventListener("click", function() {
-    root_e.style.display='block';
+    root_e.style.display = 'block';
   });
+
   function goToMain() {
       window.location.href = 'index.html';
-    }
+  }
 </script>
 </body>
 </html>

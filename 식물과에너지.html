@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre&display=swap" rel="stylesheet">
   <title>식물과 에너지</title>
   <style>
     body
     {
       background-color: rgb(200, 240, 253);
+      font-family: 'Frank Ruhl Libre', sans-serif;
     }
     .ground
     {
       position: absolute;
-      height: 400px;
+      height: 3000px;
       width: 5000px;
       background-color: peru;
       top: 40%;
@@ -23,6 +27,7 @@
       position: absolute;
       left: 50%;
       top: 20%;
+      transition: transform 0.2s;
     }
     .branch
     {
@@ -30,35 +35,137 @@
       width: 80px;
       background-color: rgb(83, 208, 83);
       position: absolute;
-      top: 20%;
+      top: 30%;
       transform: rotate(-30deg);
+      left: 50%;
+      transition: transform 0.2s;
     }
     .plant-leaf
     {
       height: 70px;
       width: 45px;
       background-color: rgb(83, 208, 83);
-      top: 1%;
+      top: 25%;
+      left: 53%;
       position: absolute;
       transform: rotate(65deg);
-      left: 480%;
-      border-radius: 100px 10px 50px 50px
+      border-radius: 100px 10px 50px 50px;
+      transition: transform 0.2s;
     }
     .plant-root
     {
       position: absolute;
-      background-color: rgba(255, 51, 0, 0.49);
+      background-color: rgb(137, 46, 4);
+      width: 10px;
+      height: 70px;
+      top: 57%;
+      left: 44%;
+      transform: rotate(65deg);
+      transition: transform 0.2s;
     }
+    .explanation
+    {
+      width:300px;
+      height: 300px;
+      background-color: rgba(128, 128, 128, 0.709);
+      position: absolute;
+    }
+    .button {
+    padding: 10px 20px;
+    font-size: 18px;  
+    background-color: #9ec6b1;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    position: absolute;
+    top: 80%;
+    left: 50%;
+  }
+  .button:hover
+  {
+    transform: scale(1.05);
+  }
   </style>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5627293747027982"
   crossorigin="anonymous"></script>
 </head>
 <body>
   <div class="ground"></div>
-  <div class="plant-pillar">
+  <div class=""></div>
+    <div class="plant-pillar">
+      <div class="explanation" style="top: -50%; left: -4000%;">
+        <button onclick="pillar_none();" style="position:absolute; background-color: #949494dd; font-size: 10px; margin: 20px; border: none; border-radius: 4px; cursor: pointer;">X</button>
+        <br><center><span>줄기</span></center>
+        <span>adsad</span>
+    </div>
+    </div>
     <div class="branch"></div>
-    <div class="plant-leaf"></div>
-    <div class="plant-root"></div>
+    <div class="plant-leaf">
+      <div class="explanation" style="transform: rotate(-65deg); top: -500%;">
+        <button onclick="leaf_none();" style="position:absolute; background-color: #949494dd; font-size: 10px; margin: 20px; border: none; border-radius: 4px; cursor: pointer;">X</button>
+        <br><center><span>잎</span></center>
+        <span>adsad</span>
+      </div>
+    </div>
+    <div class="root">
+      <div class="plant-root"style="transform: rotate(-25deg); left: 50.5%; top: 40.8%;"></div>
+      <div class="plant-root" style="transform: rotate(60deg); left: 48.5%; top: 39.8%;"></div>
+      <div class="plant-root" style="transform: rotate(25deg); left: 49.5%; top: 40.8%;"></div>
+      <div class="plant-root" style="transform: rotate(-58deg); left: 51.5%; top: 40.8%;"></div>
+      <div class="explanation" style="top: 50%; left: 30%;">
+        <button onclick="root_none();" style="position:absolute; background-color: #949494dd; font-size: 10px; margin: 20px; border: none; border-radius: 4px; cursor: pointer;">X</button>
+        <br><center><span>뿌리</span></center>
+        <span>adsad</span>
+      </div>
   </div>
+</div>
+<button class="button" onclick="goToMain()">돌아가기</button>
+<div style="top: 350%; position: absolute;">식물 싫어</div>
+
+<script>
+  var leaf = document.querySelector(".plant-leaf");
+  var pillar = document.querySelector(".plant-pillar");
+  var root = document.querySelector(".root");
+  var leaf_e = document.querySelector(".plant-leaf .explanation");
+  var pillar_e = document.querySelector(".plant-pillar .explanation");
+  var root_e = document.querySelector(".root .explanation");
+  var button=document.querySelector(".button");
+  function displaynone()
+  {
+    leaf_e.style.display='none';
+    pillar_e.style.display='none';
+    root_e.style.display='none';
+    button.style.display='block';
+  }
+  displaynone();
+
+  function leaf_none()
+  {
+    leaf_e.style.display='none';
+  }
+  function pillar_none()
+  {
+    pillar_e.style.display='none';
+  }
+  function root_none()
+  {
+    root_e.style.display='none';
+  }
+
+  leaf.addEventListener("click", function() {
+    leaf_e.style.display='block';
+  });
+  pillar.addEventListener("click", function() {
+    pillar_e.style.display='block';
+  });
+  root.addEventListener("click", function() {
+    root_e.style.display='block';
+  });
+  function goToMain() {
+      window.location.href = 'index.html';
+    }
+</script>
 </body>
 </html>

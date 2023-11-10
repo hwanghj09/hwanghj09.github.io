@@ -95,15 +95,6 @@
     }
   </style>
   <script>
-    // 모바일 기기 감지 함수
-    function detectMobileDevice() {
-      const userAgent = navigator.userAgent.toLowerCase();
-      const isMobile = /iphone|ipad|ipod|android/.test(userAgent);
-      if (isMobile) {
-        // 모바일로 접속한 경우
-        window.location.href = 'index-m.html';
-      }
-    }
     function toggleSidebar() {
       const sidebar = document.querySelector('.sidebar');
       sidebar.classList.toggle('open');

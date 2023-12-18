@@ -1,132 +1,55 @@
 <!DOCTYPE html>
-<html>
-<head>
-  
-  <title>메인</title>
-  <style>
-    body {
-      background-color: transparent;
-      background-image: url("배경화면.png");
-      background-repeat: no-repeat;
-      background-size: cover;
-      opacity: 0;
-      animation: fadeIn 1.5s ease-in-out forwards;
-    }
-    .button-container {
-      position: absolute;
-      left: 100px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-    .button {
-      display: block;
-      width: 200px;
-      height: 30px;
-      margin-bottom: 45px;
-      text-align: center;
-      background-color: #ffc9f2;
-      color: rgb(255, 255, 255);
-      font-size: 16px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      opacity: 0;
-      animation: fadeIn 1.3s ease-in-out forwards;
-      transform: scale(2);
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    
-    .button:hover {
-      transform: scale(2.05);
-      box-shadow: 0 0 1px 2px rgb(0, 0, 0);
-    }
-    .sidebutton
-    {
-        display: block;
-        width: 30px;
-        height: 30px;
-        margin-bottom: 45px;
-        text-align: center;
-        background-color: #ffc9f2;
-        color: rgb(255, 255, 255);
-        font-size: 16px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        opacity: 0;
-        animation: fadeIn 1.3s ease-in-out forwards;
-        transform: scale(2);
-        transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .sidebutton:hover {
-      transform: scale(2.05);
-      box-shadow: 0 0 1px 2px rgb(0, 0, 0);
-    }
-    
-    .sidebar-button {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 999;
-    }
-    
-    .sidebar {
-      position: fixed;
-      top: 0;
-      right: -300px;
-      width: 300px;
-      height: 100%;
-      background-color: #fff;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-      transition: right 0.3s;
-    }
-    
-    .sidebar.open {
-      right: 0;
-    }
-    
-    .sidebar-content {
-      padding: 20px;
-    }
-    
-    @keyframes fadeIn {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
-    }
-  </style>
-  <script>
-    function toggleSidebar() {
-      const sidebar = document.querySelector('.sidebar');
-      sidebar.classList.toggle('open');
-    }
-    function gotosetchange()
-    {
-        window.location.href="자리바꾸기.html";
-    }
-  </script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5627293747027982"
-  crossorigin="anonymous"></script>
-</head>
-<body onload="detectMobileDevice()">
-  <div class="button-container">
-    <button class="button" onclick="location.href='물질의구성.html'">물질의 구성</button>
-    <button class="button" onclick="location.href='전기와 자기.html'">전기와 자기</button>
-    <button class="button" onclick="location.href='태양계.html'"">태양계</button>
-    <button class="button" onclick="location.href='식물과에너지.html'"">식물과 에너지</button>
-    <button class="button">동물과 에너지</button>
-    <button class="button"onclick="location.href='물질의특성.html'"">물질의 특성</button>
-    <button class="button">수권과 해수의 순환</button>
-    <button class="button">열과 우리 생활</button>
-  </div>
+<html lang="en">
 
-  <div class="sidebar-button">
-    <button class="sidebutton" onclick="toggleSidebar()">≡</button>
-  </div>
-  
-  <div class="sidebar">
-    <div class="sidebar-content">
-      <div onclick="gotosetchange()">■ 자리 바꾸기</div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        .go-box-container {
+            display: flex;
+            gap: 50px;
+        }
+        
+        .go-box {
+            width: 150px;
+            height: 150px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .go-box:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="go-box-container">
+        <div class="go-box" onclick="window.location='불꽃실험.html'">불꽃실험</div>
+        <div class="go-box" onclick="window.location='전기회로.html'">전기회로</div>
+        <div class="go-box" onclick="window.location='태양계.html'">태양계</div>
+        <div class="go-box" onclick="window.location='식물과에너지.html'">식물과에너지</div>
+        <div class="go-box" onclick="window.location='용해도.html'">용해도</div>
     </div>
-  </div>
 </body>
+
 </html>

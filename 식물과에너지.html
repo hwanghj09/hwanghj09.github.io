@@ -1,123 +1,125 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre&display=swap" rel="stylesheet">
-  <title>식물과 에너지</title>
-  <style>
-    body
-    {
-      background-color: rgb(200, 240, 253);
-      font-family: 'Frank Ruhl Libre', sans-serif;
-    }
-    .ground
-    {
-      position: absolute;
-      height: 3000px;
-      width: 5000px;
-      background-color: peru;
-      top: 40%;
-    }
-    .plant-pillar
-    {
-      height: 200px;
-      width: 10px;
-      background-color: rgb(83, 208, 83);
-      position: absolute;
-      left: 50%;
-      top: 20%;
-      transition: transform 0.2s;
-    }
-    .branch
-    {
-      height: 10px;
-      width: 80px;
-      background-color: rgb(83, 208, 83);
-      position: absolute;
-      top: 30%;
-      transform: rotate(-30deg);
-      left: 50%;
-      transition: transform 0.2s;
-    }
-    .plant-leaf
-    {
-      height: 70px;
-      width: 45px;
-      background-color: rgb(83, 208, 83);
-      top: 25%;
-      left: 53%;
-      position: absolute;
-      transform: rotate(65deg);
-      border-radius: 100px 10px 50px 50px;
-      transition: transform 0.2s;
-    }
-    .plant-root
-    {
-      position: absolute;
-      background-color: rgb(137, 46, 4);
-      width: 10px;
-      height: 70px;
-      top: 57%;
-      left: 44%;
-      transform: rotate(65deg);
-      transition: transform 0.2s;
-    }
-    .p-explanation
-    {
-      width:300px;
-      height: 300px;
-      background-color: rgba(128, 128, 128, 0.709);
-      position: absolute;
-      top: 13%;
-      left: 30%;
-    }
-    .r-explanation
-    {
-      width:300px;
-      height: 300px;
-      background-color: rgba(128, 128, 128, 0.709);
-      position: absolute;
-      top: 50%;
-      left: 35%;
-    }
-    .l-explanation
-    {
-      width:300px;
-      height: 300px;
-      background-color: rgba(128, 128, 128, 0.709);
-      position: absolute;
-      top: 10%;
-      left: 60%;
-    }
-    .button {
-    padding: 10px 20px;
-    font-size: 18px;  
-    background-color: #9ec6b1;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: transform 0.2s;
-    position: absolute;
-    top: 80%;
-    left: 50%;
-  }
-  .button:hover
-  {
-    transform: scale(1.05);
-  }
-  </style>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5627293747027982"
-  crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre&display=swap" rel="stylesheet">
+    <title>식물과 에너지</title>
+    <style>
+        body {
+            background-color: rgb(200, 240, 253);
+            font-family: 'Frank Ruhl Libre', sans-serif;
+        }
+        
+        .ground {
+            position: absolute;
+            height: 3000px;
+            width: 5000px;
+            background-color: peru;
+            top: 40%;
+        }
+        
+        .plant-pillar {
+            height: 200px;
+            width: 10px;
+            background-color: rgb(83, 208, 83);
+            position: absolute;
+            left: 50%;
+            top: 20%;
+            transition: transform 0.2s;
+        }
+        
+        .branch {
+            height: 10px;
+            width: 80px;
+            background-color: rgb(83, 208, 83);
+            position: absolute;
+            top: 30%;
+            transform: rotate(-30deg);
+            left: 50%;
+            transition: transform 0.2s;
+        }
+        
+        .plant-leaf {
+            height: 70px;
+            width: 45px;
+            background-color: rgb(83, 208, 83);
+            top: 25%;
+            left: 53%;
+            position: absolute;
+            transform: rotate(65deg);
+            border-radius: 100px 10px 50px 50px;
+            transition: transform 0.2s;
+        }
+        
+        .plant-root {
+            position: absolute;
+            background-color: rgb(137, 46, 4);
+            width: 10px;
+            height: 70px;
+            top: 57%;
+            left: 44%;
+            transform: rotate(65deg);
+            transition: transform 0.2s;
+        }
+        
+        .p-explanation {
+            width: 300px;
+            height: 300px;
+            background-color: rgba(128, 128, 128, 0.709);
+            position: absolute;
+            top: 13%;
+            left: 30%;
+        }
+        
+        .r-explanation {
+            width: 300px;
+            height: 300px;
+            background-color: rgba(128, 128, 128, 0.709);
+            position: absolute;
+            top: 50%;
+            left: 35%;
+        }
+        
+        .l-explanation {
+            width: 300px;
+            height: 300px;
+            background-color: rgba(128, 128, 128, 0.709);
+            position: absolute;
+            top: 10%;
+            left: 60%;
+        }
+        
+        .button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #9ec6b1;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: absolute;
+            top: 80%;
+            left: 50%;
+        }
+        
+        .button:hover {
+            transform: scale(1.05);
+        }
+    </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5627293747027982" crossorigin="anonymous"></script>
 </head>
+
 <body>
-  <div class="ground"></div>
+    <div class="ground"></div>
     <div class="plant-pillar"></div>
     <div class="p-explanation">
-      <button onclick="pillar_none();" style="position:absolute; background-color: #949494dd; font-size: 20px; margin: 20px; border: none; border-radius: 4px; cursor: pointer; left: 250px;">X</button>
-      <br><center><span>줄기</span></center>
-      <span style="color: white;">1.식물의 줄기는 식물을 지탱하고 구조적인 강도를 제공하여 잎과 꽃이 효과적으로 자라고 서 있는 역할을 합니다.<br>
+        <button onclick="pillar_none();" style="position:absolute; background-color: #949494dd; font-size: 20px; margin: 20px; border: none; border-radius: 4px; cursor: pointer; left: 250px;">X</button>
+        <br>
+        <center><span>줄기</span></center>
+        <span style="color: white;">1.식물의 줄기는 식물을 지탱하고 구조적인 강도를 제공하여 잎과 꽃이 효과적으로 자라고 서 있는 역할을 합니다.<br>
 
   2.줄기는 뿌리에서 흡수한 물과 영양분을 잎과 다른 부분으로 운반하여 식물 전체에 고르게 공급합니다.<br>
   
@@ -127,9 +129,10 @@
     <div class="branch"></div>
     <div class="plant-leaf"></div>
     <div class="l-explanation">
-      <button onclick="leaf_none();" style="position:absolute; background-color: #949494dd; font-size: 20px; margin: 20px; border: none; border-radius: 4px; cursor: pointer; left: 250px;">X</button>
-      <br><center><span>잎</span></center>
-      <span style="color: white;">1.잎은 태양에서 오는 빛을 포착하여 이를 활용해 이산화탄소와 물을 결합시키고, 그 결과로 산소를 발생시키는 광합성 과정을 수행합니다.<br>
+        <button onclick="leaf_none();" style="position:absolute; background-color: #949494dd; font-size: 20px; margin: 20px; border: none; border-radius: 4px; cursor: pointer; left: 250px;">X</button>
+        <br>
+        <center><span>잎</span></center>
+        <span style="color: white;">1.잎은 태양에서 오는 빛을 포착하여 이를 활용해 이산화탄소와 물을 결합시키고, 그 결과로 산소를 발생시키는 광합성 과정을 수행합니다.<br>
 
 2.잎은 기관으로서 이산화탄소를 흡수하고 산소를 방출함으로써 식물의 대사 활동을 지원하며, 주변 환경과의 가스 교환이 이루어집니다.<br>
 
@@ -137,63 +140,64 @@
     </div>
 
     <div class="root">
-      <div class="plant-root"style="transform: rotate(-25deg); left: 50.5%; top: 40.8%;"></div>
-      <div class="plant-root" style="transform: rotate(60deg); left: 48.5%; top: 39.8%;"></div>
-      <div class="plant-root" style="transform: rotate(25deg); left: 49.5%; top: 40.8%;"></div>
-      <div class="plant-root" style="transform: rotate(-58deg); left: 51.5%; top: 40.8%;"></div>
-  </div>
-  <div class="r-explanation">
-    <button onclick="root_none();" style="position:absolute; background-color: #949494dd; font-size: 20px; margin: 20px; border: none; border-radius: 4px; cursor: pointer; left: 250px;">X</button>
-    <br><center><span>뿌리</span></center>
-    <span style="color: white;">1.뿌리는 토양으로부터 물과 영양소를 흡수하여 식물 전체에 공급하며, 이를 통해 생존과 성장을 지원합니다.<br>
+        <div class="plant-root" style="transform: rotate(-25deg); left: 50.5%; top: 40.8%;"></div>
+        <div class="plant-root" style="transform: rotate(60deg); left: 48.5%; top: 39.8%;"></div>
+        <div class="plant-root" style="transform: rotate(25deg); left: 49.5%; top: 40.8%;"></div>
+        <div class="plant-root" style="transform: rotate(-58deg); left: 51.5%; top: 40.8%;"></div>
+    </div>
+    <div class="r-explanation">
+        <button onclick="root_none();" style="position:absolute; background-color: #949494dd; font-size: 20px; margin: 20px; border: none; border-radius: 4px; cursor: pointer; left: 250px;">X</button>
+        <br>
+        <center><span>뿌리</span></center>
+        <span style="color: white;">1.뿌리는 토양으로부터 물과 영양소를 흡수하여 식물 전체에 공급하며, 이를 통해 생존과 성장을 지원합니다.<br>
 
 2.뿌리는 토양에 굳게 고정되어 식물을 안정적으로 지탱하고, 바람이나 외부 충격에 대한 저항력을 제공합니다.
 <br>
 3.뿌리는 전분과 같은 열량을 저장하고, 필요할 때 이를 활용하여 에너지를 공급함으로써 식물이 어려운 조건에서도 살아남을 수 있게 합니다.</span>
-  </div>
+    </div>
 
-</div>
-<button class="button" onclick="goToMain()">돌아가기</button>
-<div style="top: 350%; position: absolute;">식물 싫어</div>
+    </div>
+    <button class="button" onclick="goToMain()">돌아가기</button>
+    <div style="top: 350%; position: absolute;">식물 싫어</div>
 
-<script>
-  var leaf = document.querySelector(".plant-leaf");
-  var pillar = document.querySelector(".plant-pillar");
-  var root = document.querySelector(".root");
-  var leaf_e = document.querySelector(".l-explanation");
-  var pillar_e = document.querySelector(".p-explanation");
-  var root_e = document.querySelector(".r-explanation");
-  leaf_none();
-  pillar_none();
-  root_none();
+    <script>
+        var leaf = document.querySelector(".plant-leaf");
+        var pillar = document.querySelector(".plant-pillar");
+        var root = document.querySelector(".root");
+        var leaf_e = document.querySelector(".l-explanation");
+        var pillar_e = document.querySelector(".p-explanation");
+        var root_e = document.querySelector(".r-explanation");
+        leaf_none();
+        pillar_none();
+        root_none();
 
-  function leaf_none()
-  {
-    leaf_e.style.display = 'none';
-  }
-  function pillar_none()
-  {
-    pillar_e.style.display = 'none';
-  }
-  function root_none()
-  {
-    root_e.style.display = 'none';
-  }
-  
-  // Attach event listeners before calling the "none" functions
-  leaf.addEventListener("click", function() {
-    leaf_e.style.display = 'block';
-  });
-  pillar.addEventListener("click", function() {
-    pillar_e.style.display = 'block';
-  });
-  root.addEventListener("click", function() {
-    root_e.style.display = 'block';
-  });
+        function leaf_none() {
+            leaf_e.style.display = 'none';
+        }
 
-  function goToMain() {
-      window.location.href = 'index.html';
-  }
-</script>
+        function pillar_none() {
+            pillar_e.style.display = 'none';
+        }
+
+        function root_none() {
+            root_e.style.display = 'none';
+        }
+
+        // Attach event listeners before calling the "none" functions
+        leaf.addEventListener("click", function() {
+            leaf_e.style.display = 'block';
+        });
+        pillar.addEventListener("click", function() {
+            pillar_e.style.display = 'block';
+        });
+        root.addEventListener("click", function() {
+            root_e.style.display = 'block';
+        });
+
+        function goToMain() {
+            window.location.href = 'index.html';
+        }
+    </script>
 </body>
+
 </html>

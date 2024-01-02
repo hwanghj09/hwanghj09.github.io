@@ -1,101 +1,120 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <title>불꽃 실험</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      font-size: 22px;
-      font-weight: bold;
-    }
-    .fire-container {
-      position: relative;
-      width: 300px;
-      height: 200px;
-      margin-bottom: 20px;
-    }
-    .fire {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 500%;
-      background: linear-gradient(to top, #ff8000, #ffc000);
-      border-radius: 50% 50% 0 0;
-      animation: flame 1s ease-in-out infinite;
-      cursor: move;
-    }
-    @keyframes flame {
-      0% {
-        height: 70%;
-      }
-      50% {
-        height: 65%;
-      }
-      100% {
-        height: 70%;
-      }
-    }
-    .button {
-      padding: 10px 20px;
-      font-size: 18px;  
-      background-color: #9ec6b1;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    .button:hover
-    {
-      transform: scale(1.05);
-    }
-    .input-container {
-      position: relative;
-      margin-bottom: 80px;
-    }
-    select {
-      padding: 10px;
-      font-size: 18px;
-      border: 2px solid #ccc;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .circle-container {
-      position: absolute;
-      right: 300px;
-      transform: translate(50%, -50%);
-    }
-    .circle {
-      width: 80px;
-      height: 80px;
-      background-color: #808080;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: move;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>불꽃 실험</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font: 22px 'Helvetica Neue', Arial, sans-serif;
+            color: #333;
+            background: linear-gradient(to bottom, #f0f0f0, #c0c0c0);
+        }
+        
+        .fire-container,
+        .circle-container {
+            margin-bottom: 20px;
+        }
+        
+        .fire-container {
+            position: relative;
+            width: 300px;
+            height: 200px;
+        }
+        
+        .fire {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 500%;
+            background: linear-gradient(to top, #ff8000, #ffc000);
+            border-radius: 50% 50% 0 0;
+            animation: flame 1s ease-in-out infinite;
+            cursor: move;
+        }
+        
+        @keyframes flame {
+            0% {
+                height: 70%;
+            }
+            50% {
+                height: 65%;
+            }
+            100% {
+                height: 70%;
+            }
+        }
+        
+        .button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+        }
+        
+        .button:hover {
+            transform: scale(1.05);
+            background-color: #45a049;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .input-container {
+            position: relative;
+            margin-bottom: 80px;
+        }
+        
+        select {
+            padding: 10px;
+            font-size: 18px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .circle-container {
+            position: absolute;
+            right: 300px;
+            transform: translate(50%, -50%);
+        }
+        
+        .circle {
+            width: 80px;
+            height: 80px;
+            background-color: #808080;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: move;
+        }
+    </style>
 </head>
+
 <body>
-  <div class="fire-container">
-    <div class="fire"></div>
-  </div>
+    <div class="fire-container">
+        <div class="fire"></div>
+    </div>
 
-  <div class="circle-container">
-    <div class="circle"></div>
-  </div>
+    <div class="circle-container">
+        <div class="circle"></div>
+    </div>
 
-  <div class="input-container">
-    <select id="select-input" onchange="updateCircleText()" ontouchstart="updateCircleText()">
+    <div class="input-container">
+        <select id="select-input" onchange="updateCircleText()" ontouchstart="updateCircleText()">
       <option value="">원소 기호를 선택하세요.</option>
       <option value="Li">Li</option>
       <option value="Na">Na</option>
@@ -105,100 +124,104 @@
       <option value="Sr">Sr</option>
       <option value="Ba">Ba</option>
     </select>
-  </div>
+    </div>
 
-  <button class="button" onclick="goToMain()">돌아가기</button>
+    <button class="button" onclick="goToMain()">돌아가기</button>
 
-  <script>
-    const circleElement = document.querySelector('.circle');
-    const selectInputElement = document.getElementById('select-input');
-    const fireElement = document.querySelector('.fire');
+    <script>
+        const circleElement = document.querySelector('.circle');
+        const selectInputElement = document.getElementById('select-input');
+        const fireElement = document.querySelector('.fire');
 
-    // 원을 드래그할 수 있도록 설정
-    let isDragging = false;
-    let offset = { x: 0, y: 0 };
+        // 원을 드래그할 수 있도록 설정
+        let isDragging = false;
+        let offset = {
+            x: 0,
+            y: 0
+        };
 
-    circleElement.addEventListener('mousedown', startDrag);
-    circleElement.addEventListener('touchstart', startDrag);
-    window.addEventListener('mousemove', drag);
-    window.addEventListener('touchmove', drag);
-    window.addEventListener('mouseup', stopDrag);
-    window.addEventListener('touchend', stopDrag);
+        circleElement.addEventListener('mousedown', startDrag);
+        circleElement.addEventListener('touchstart', startDrag);
+        window.addEventListener('mousemove', drag);
+        window.addEventListener('touchmove', drag);
+        window.addEventListener('mouseup', stopDrag);
+        window.addEventListener('touchend', stopDrag);
 
-    function startDrag(event) {
-      event.preventDefault();
-      isDragging = true;
-      if (event.type === 'mousedown') {
-        offset.x = event.clientX - circleElement.getBoundingClientRect().left;
-        offset.y = event.clientY - circleElement.getBoundingClientRect().top;
-      } else if (event.type === 'touchstart') {
-        offset.x = event.touches[0].clientX - circleElement.getBoundingClientRect().left;
-        offset.y = event.touches[0].clientY - circleElement.getBoundingClientRect().top;
-      }
-    }
-
-    function drag(event) {
-      if (isDragging) {
-        event.preventDefault();
-        const containerRect = circleElement.parentElement.getBoundingClientRect();
-        let x, y;
-        if (event.type === 'mousemove') {
-          x = event.clientX - containerRect.left - offset.x;
-          y = event.clientY - containerRect.top - offset.y;
-        } else if (event.type === 'touchmove') {
-          x = event.touches[0].clientX - containerRect.left - offset.x;
-          y = event.touches[0].clientY - containerRect.top - offset.y;
+        function startDrag(event) {
+            event.preventDefault();
+            isDragging = true;
+            if (event.type === 'mousedown') {
+                offset.x = event.clientX - circleElement.getBoundingClientRect().left;
+                offset.y = event.clientY - circleElement.getBoundingClientRect().top;
+            } else if (event.type === 'touchstart') {
+                offset.x = event.touches[0].clientX - circleElement.getBoundingClientRect().left;
+                offset.y = event.touches[0].clientY - circleElement.getBoundingClientRect().top;
+            }
         }
-        circleElement.style.transform = `translate(${x}px, ${y}px)`;
 
-        // 불꽃과 접촉하면 색상 변경
-        const circleRect = circleElement.getBoundingClientRect();
-        const fireRect = fireElement.getBoundingClientRect();
+        function drag(event) {
+            if (isDragging) {
+                event.preventDefault();
+                const containerRect = circleElement.parentElement.getBoundingClientRect();
+                let x, y;
+                if (event.type === 'mousemove') {
+                    x = event.clientX - containerRect.left - offset.x;
+                    y = event.clientY - containerRect.top - offset.y;
+                } else if (event.type === 'touchmove') {
+                    x = event.touches[0].clientX - containerRect.left - offset.x;
+                    y = event.touches[0].clientY - containerRect.top - offset.y;
+                }
+                circleElement.style.transform = `translate(${x}px, ${y}px)`;
 
-        if (
-          circleRect.right >= fireRect.left &&
-          circleRect.left <= fireRect.right &&
-          circleRect.bottom >= fireRect.top &&
-          circleRect.top <= fireRect.bottom
-        ) {
-          const selectedValue = selectInputElement.value;
-          if (selectedValue === 'Li') {
-            fireElement.style.background = 'red';
-          } else if (selectedValue === 'Na') {
-            fireElement.style.background = 'yellow';
-          } else if (selectedValue === 'Ca') {
-            fireElement.style.background = 'orange';
-          } else if (selectedValue === 'Cu') {
-            fireElement.style.background = 'teal';
-          } else if (selectedValue === 'K') {
-            fireElement.style.background = 'purple';
-          } else if (selectedValue === 'Sr') {
-            fireElement.style.background = 'red';
-          } else if (selectedValue === 'Ba') {
-            fireElement.style.background = 'lime';
-          }
-        } else {
-          fireElement.style.background = 'linear-gradient(to top, #ff8000, #ffc000)';
+                // 불꽃과 접촉하면 색상 변경
+                const circleRect = circleElement.getBoundingClientRect();
+                const fireRect = fireElement.getBoundingClientRect();
+
+                if (
+                    circleRect.right >= fireRect.left &&
+                    circleRect.left <= fireRect.right &&
+                    circleRect.bottom >= fireRect.top &&
+                    circleRect.top <= fireRect.bottom
+                ) {
+                    const selectedValue = selectInputElement.value;
+                    if (selectedValue === 'Li') {
+                        fireElement.style.background = 'red';
+                    } else if (selectedValue === 'Na') {
+                        fireElement.style.background = 'yellow';
+                    } else if (selectedValue === 'Ca') {
+                        fireElement.style.background = 'orange';
+                    } else if (selectedValue === 'Cu') {
+                        fireElement.style.background = 'teal';
+                    } else if (selectedValue === 'K') {
+                        fireElement.style.background = 'purple';
+                    } else if (selectedValue === 'Sr') {
+                        fireElement.style.background = 'red';
+                    } else if (selectedValue === 'Ba') {
+                        fireElement.style.background = 'lime';
+                    }
+                } else {
+                    fireElement.style.background = 'linear-gradient(to top, #ff8000, #ffc000)';
+                }
+            }
         }
-      }
-    }
 
-    function stopDrag(event) {
-      event.preventDefault();
-      isDragging = false;
-    }
+        function stopDrag(event) {
+            event.preventDefault();
+            isDragging = false;
+        }
 
-    function updateCircleText() {
-      const selectedValue = selectInputElement.value;
-      circleElement.innerText = selectedValue;
+        function updateCircleText() {
+            const selectedValue = selectInputElement.value;
+            circleElement.innerText = selectedValue;
 
-      // 불꽃과 접촉하지 않은 상태로 변경
-      fireElement.style.background = 'linear-gradient(to top, #ff8000, #ffc000)';
-    }
+            // 불꽃과 접촉하지 않은 상태로 변경
+            fireElement.style.background = 'linear-gradient(to top, #ff8000, #ffc000)';
+        }
 
-    function goToMain() {
-      window.location.href = 'index.html';
-    }
-  </script>
+        function goToMain() {
+            window.location.href = 'index.html';
+        }
+    </script>
 </body>
+
 </html>

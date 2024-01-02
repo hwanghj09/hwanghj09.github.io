@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>물이 들어있는 컵</title>
     <style>
         body {
             background-color: lightgreen;
         }
+        
         .cup {
             position: absolute;
             background-color: rgb(189, 190, 190);
@@ -19,6 +21,7 @@
             align-items: center;
             top: 400px;
         }
+        
         .water {
             background-color: rgba(0, 0, 255, 0.7);
             width: 250px;
@@ -27,12 +30,14 @@
             bottom: 20px;
             left: 70px;
         }
+        
         .chemical-name {
             position: absolute;
             font-size: 50px;
             font-weight: bold;
             color: white;
         }
+        
         .chemical {
             display: flex;
             align-items: center;
@@ -49,6 +54,7 @@
             font-size: 20px;
             text-align: center;
         }
+        
         .fire-container {
             position: relative;
             width: 300px;
@@ -56,6 +62,7 @@
             margin-bottom: 20px;
             display: none;
         }
+        
         .fire {
             position: absolute;
             bottom: 0;
@@ -68,6 +75,7 @@
             animation: flame 1s ease-in-out infinite;
             cursor: move;
         }
+        
         @keyframes flame {
             0% {
                 height: 70%;
@@ -79,9 +87,9 @@
                 height: 70%;
             }
         }
-        
     </style>
 </head>
+
 <body>
     <div class="cup">
         <div class="water">
@@ -106,28 +114,28 @@
         var fireContainer = document.querySelector(".fire-container");
         var precipitation = document.querySelector(".precipitation");
         var waterTemperature = 20; // 초기 물의 온도
-        var inputValue =0;
+        var inputValue = 0;
         const chemical = document.getElementById("chemicalElement");
         const water = document.querySelector(".water");
         var chemicalsSolubility = {
             PotassiumNitrate: {
-                temperatures: [0,20, 40, 60, 80, 100, 120],
-                solubilities: [10,13.3,24.2,36.2, 52.5, 74.4, 106]
+                temperatures: [0, 20, 40, 60, 80, 100, 120],
+                solubilities: [10, 13.3, 24.2, 36.2, 52.5, 74.4, 106]
             },
             SodiumNitrate: {
-                temperatures: [0,20, 40, 60, 80, 100],  
+                temperatures: [0, 20, 40, 60, 80, 100],
                 solubilities: [73.3, 80.4, 88.9, 98.8, 110.0, 122.4]
             },
             CopperSulfate: {
-                temperatures: [0,20, 40, 60, 80, 100],
+                temperatures: [0, 20, 40, 60, 80, 100],
                 solubilities: [23.0, 23.7, 24.4, 25.1, 25.8, 26.5]
             },
             SodiumChloride: {
-                temperatures: [0,20, 40, 60, 80, 100],
-                solubilities: [35.7, 35.8, 35.9,36.0,36.1, 36.2]
+                temperatures: [0, 20, 40, 60, 80, 100],
+                solubilities: [35.7, 35.8, 35.9, 36.0, 36.1, 36.2]
             },
             PotassiumBisulfate: {
-                temperatures: [0,10,20, 40, 60],
+                temperatures: [0, 10, 20, 40, 60],
                 solubilities: [2.52, 4.72, 5.7, 19.10, 27.53]
             }
         };
@@ -181,6 +189,7 @@
                 }
             }, 500);
         }
+
         function checkContact() {
             const chemicalRect = chemical.getBoundingClientRect();
             const waterRect = water.getBoundingClientRect();
@@ -193,7 +202,7 @@
                 chemicalRect.bottom > waterRect.top
             ) {
                 // Chemical이 Water와 닿으면 updateGraphData 함수를 호출합니다.
-                inputValue=input;
+                inputValue = input;
 
                 // Chemical을 숨깁니다.
                 chemical.style.top = '500px';
@@ -208,13 +217,13 @@
 
         function drawSolubilityGraph(chemicalName) {
             const ctx = document.getElementById('solubilityChart').getContext('2d');
-            
-            if(window.myChart) {
+
+            if (window.myChart) {
                 window.myChart.destroy();
             }
 
             const selectedChemical = chemicalsSolubility[chemicalName];
-            
+
             window.myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -229,11 +238,11 @@
                 },
                 options: {
                     responsive: false,
-                    plugins:{
-                legend: {
-                    display: false
-                }
-            },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
                     scales: {
                         x: {
                             type: 'linear',
@@ -268,7 +277,10 @@
                 }
                 Object.keys(chemicalsSolubility).forEach(chemicalName => {
                     window.myChart.data.datasets.push({
-                        data: [{ x: waterTemperature, y: inputValue }],
+                        data: [{
+                            x: waterTemperature,
+                            y: inputValue
+                        }],
                         borderColor: 'red',
                         backgroundColor: 'red',
                         pointRadius: 5,
@@ -276,11 +288,11 @@
                     });
                 });
 
-                
+
                 window.myChart.update();
             }
         }
-        
+
         function movePoint() {
             if (window.myChart && window.myChart.data.datasets.length > 0) {
                 window.myChart.data.datasets.forEach(dataset => {
@@ -313,4 +325,5 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
+
 </html>

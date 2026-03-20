@@ -15,3 +15,6 @@ pangyo25-104 - 판교고 2025 104 반 사이트 - http://pghs104.dothome.co.kr/
 23scienceportfolio - 과학 포트폴리오 - 없음 
 jslab - 자바스크립트 실험실 - 없음
 donghyunlang - 동현이 언어 - https://hwanghj09.github.io/donghyunlang/
+찾동
+솔브잇
+pghs-qna

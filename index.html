@@ -1097,11 +1097,14 @@
       const left = parseFloat(card.style.left) || 0;
       const top = parseFloat(card.style.top) || 0;
       const rect = card.getBoundingClientRect();
-      return { card, left, top, width: rect.width, height: rect.height };
+      const mass = Math.max(1, rect.width * rect.height);
+      return { card, left, top, width: rect.width, height: rect.height, mass };
     };
 
     const resolveCollisions = (boxes) => {
       let collided = false;
+      const soften = 0.55;
+      const impulse = 0.035;
       for (let i = 0; i < boxes.length; i++) {
         for (let j = i + 1; j < boxes.length; j++) {
           const a = boxes[i];
@@ -1110,14 +1113,25 @@
           const overlapY = Math.min(a.top + a.height, b.top + b.height) - Math.max(a.top, b.top);
           if (overlapX > 0 && overlapY > 0) {
             collided = true;
+            const totalMass = a.mass + b.mass;
+            const wa = b.mass / totalMass; // lighter moves more
+            const wb = a.mass / totalMass;
             if (overlapX < overlapY) {
-              const push = overlapX / 2 + 0.5;
-              a.left -= push;
-              b.left += push;
+              const push = overlapX * soften;
+              a.left -= push * wa;
+              b.left += push * wb;
+              const va = parseFloat(a.card.dataset.pvx || '0');
+              const vb = parseFloat(b.card.dataset.pvx || '0');
+              a.card.dataset.pvx = (va - overlapX * impulse * wa).toFixed(2);
+              b.card.dataset.pvx = (vb + overlapX * impulse * wb).toFixed(2);
             } else {
-              const push = overlapY / 2 + 0.5;
-              a.top -= push;
-              b.top += push;
+              const push = overlapY * soften;
+              a.top -= push * wa;
+              b.top += push * wb;
+              const va = parseFloat(a.card.dataset.pvy || '0');
+              const vb = parseFloat(b.card.dataset.pvy || '0');
+              a.card.dataset.pvy = (va - overlapY * impulse * wa).toFixed(2);
+              b.card.dataset.pvy = (vb + overlapY * impulse * wb).toFixed(2);
             }
           }
         }
@@ -1128,7 +1142,7 @@
     const startPhysics = () => {
       if (physicsRunning) return;
       physicsRunning = true;
-      const friction = 0.95;
+      const friction = 0.92;
 
       const tick = () => {
         if (!physicsEnabled) {
@@ -1145,7 +1159,6 @@
 
         const boxes = visibleCards.map(getCardBox);
         let anyMoving = false;
-
         boxes.forEach(box => {
           const card = box.card;
           let vx = parseFloat(card.dataset.pvx || '0');
@@ -1157,10 +1170,10 @@
           const maxLeft = Math.max(0, gridRect.width - box.width);
           const maxTop = Math.max(0, gridRect.height - box.height);
 
-          if (box.left < 0) { box.left = 0; vx *= -0.6; }
-          if (box.top < 0) { box.top = 0; vy *= -0.6; }
-          if (box.left > maxLeft) { box.left = maxLeft; vx *= -0.6; }
-          if (box.top > maxTop) { box.top = maxTop; vy *= -0.6; }
+          if (box.left < 0) { box.left = 0; vx *= -0.3; }
+          if (box.top < 0) { box.top = 0; vy *= -0.3; }
+          if (box.left > maxLeft) { box.left = maxLeft; vx *= -0.3; }
+          if (box.top > maxTop) { box.top = maxTop; vy *= -0.3; }
 
           vx *= friction;
           vy *= friction;

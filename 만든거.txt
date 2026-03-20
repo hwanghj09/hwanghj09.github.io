@@ -15,10 +15,9 @@ pangyo25-104 - 판교고 2025 104 반 사이트 - http://pghs104.dothome.co.kr/
 23scienceportfolio - 과학 포트폴리오 - 없음 
 jslab - 자바스크립트 실험실 - 없음
 donghyunlang - 동현이 언어 - https://hwanghj09.github.io/donghyunlang/
-찾동
-솔브잇
-pghs-qna
-
+찾동 - 동아리 찾기 - https://chatdong.xyz/
+솔브잇 - 자기주도 학습 - https://solve-it.kro.kr/
+pghs-qna - 판교고 QNA - https://pghs-qna.web.app/
 KAIEF - 대한민국 행사 파인어 챗봇 - 없음
 jaribakugi  - 자리바꾸기 - https://elilim09.github.io/jaribakugi/
 ScriptBox - 개발자 디시 - 없음

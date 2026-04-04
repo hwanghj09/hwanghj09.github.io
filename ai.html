@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수능 예측 AI — 딥러닝 시각화</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a0b10; --panel:rgba(13,15,30,0.88);
+  --cyan:#00f2ff; --purple:#7000ff; --green:#39ff14;
+  --pink:#ff2d78; --yellow:#ffdd00;
+  --text:#c8d8ff; --dim:#4a5580;
+  --font-mono:'Share Tech Mono','Courier New',monospace;
+  --font-disp:'Orbitron',sans-serif;
+  --gc:0 0 8px #00f2ff,0 0 22px rgba(0,242,255,0.4);
+  --gp:0 0 8px #7000ff,0 0 22px rgba(112,0,255,0.4);
+  --gg:0 0 8px #39ff14,0 0 26px rgba(57,255,20,0.5);
+  --gk:0 0 8px #ff2d78,0 0 22px rgba(255,45,120,0.4);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-family:var(--font-mono);overflow:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;
+  background-image:linear-gradient(rgba(0,242,255,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,242,255,0.025) 1px,transparent 1px);
+  background-size:40px 40px;pointer-events:none;}
+#app{width:100%;height:100%;position:relative;z-index:1;}
+.phase{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .45s;}
+.phase.active{opacity:1;pointer-events:all;}
+
+/* ── 공통 ── */
+.glass{background:var(--panel);border:1px solid rgba(0,242,255,0.14);border-radius:12px;
+  backdrop-filter:blur(12px);box-shadow:inset 0 1px 0 rgba(0,242,255,0.07),0 4px 32px rgba(0,0,0,0.55);}
+button{cursor:pointer;font-family:var(--font-mono);border:none;outline:none;}
+.btn-c{background:transparent;border:1px solid var(--cyan);color:var(--cyan);padding:7px 16px;
+  border-radius:4px;font-size:11px;letter-spacing:2px;text-transform:uppercase;transition:all .3s;
+  position:relative;overflow:hidden;}
+.btn-c::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(0,242,255,0.1),transparent);
+  transform:translateX(-100%);transition:transform .4s;}
+.btn-c:hover::before{transform:translateX(100%);}
+.btn-c:hover{background:rgba(0,242,255,0.1);box-shadow:var(--gc);}
+.btn-p{background:rgba(112,0,255,0.15);border:1px solid var(--purple);color:#bb88ff;
+  padding:8px 20px;border-radius:4px;font-size:12px;letter-spacing:2px;transition:all .3s;}
+.btn-p:hover{background:rgba(112,0,255,0.3);box-shadow:var(--gp);color:#fff;}
+.btn-g{background:rgba(57,255,20,0.1);border:1px solid var(--green);color:var(--green);
+  padding:10px 24px;border-radius:4px;font-size:13px;letter-spacing:3px;transition:all .3s;font-family:var(--font-disp);}
+.btn-g:hover{background:rgba(57,255,20,0.2);box-shadow:var(--gg);}
+.btn-y{background:rgba(255,221,0,0.1);border:1px solid var(--yellow);color:var(--yellow);
+  padding:7px 14px;border-radius:4px;font-size:11px;letter-spacing:2px;transition:all .3s;}
+.btn-y:hover{background:rgba(255,221,0,0.2);box-shadow:0 0 8px var(--yellow);}
+.panel-title{font-family:var(--font-disp);font-size:10px;letter-spacing:3px;color:var(--dim);
+  text-transform:uppercase;border-bottom:1px solid rgba(0,242,255,0.09);padding-bottom:6px;margin-bottom:4px;}
+.speed-btn{background:rgba(0,0,0,0.4);border:1px solid rgba(0,242,255,0.2);color:var(--dim);
+  padding:5px 10px;border-radius:4px;font-size:11px;font-family:var(--font-disp);cursor:pointer;transition:all .2s;}
+.speed-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.speed-btn.active{background:rgba(0,242,255,0.15);border-color:var(--cyan);color:var(--cyan);box-shadow:var(--gc);}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(0,242,255,0.18);border-radius:2px;}
+
+/* ═══ PHASE 1 ═══ */
+#phase1{padding:0;}
+.header-bar{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 24px;border-bottom:1px solid rgba(0,242,255,0.11);flex-shrink:0;}
+.header-title{font-family:var(--font-disp);font-size:14px;font-weight:700;
+  color:var(--cyan);text-shadow:var(--gc);letter-spacing:3px;}
+.header-sub{font-size:10px;color:var(--dim);letter-spacing:2px;}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);
+  box-shadow:var(--gg);animation:pdot 2s infinite;}
+@keyframes pdot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(1.3);}}
+.main-grid{flex:1;display:grid;grid-template-columns:340px 1fr 245px;gap:13px;padding:13px;min-height:0;}
+
+/* ── 좌측 패널 ── */
+#input-panel{padding:15px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;}
+.score-input-item{display:flex;flex-direction:column;gap:5px;}
+.score-label{display:flex;justify-content:space-between;align-items:center;}
+.score-name{font-size:12px;color:var(--text);letter-spacing:1px;}
+.score-val{font-family:var(--font-disp);font-size:19px;font-weight:700;
+  color:var(--cyan);text-shadow:var(--gc);min-width:38px;text-align:right;}
+input[type=range]{-webkit-appearance:none;width:100%;height:3px;
+  background:rgba(0,242,255,0.1);border-radius:2px;outline:none;border:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;
+  border-radius:50%;background:var(--cyan);box-shadow:var(--gc);cursor:pointer;transition:transform .2s;}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3);}
+input[type=range]::-webkit-slider-runnable-track{
+  background:linear-gradient(90deg,var(--cyan),var(--purple));height:3px;border-radius:2px;}
+.bar-bg{height:2px;background:rgba(0,242,255,0.07);border-radius:1px;overflow:hidden;}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));
+  border-radius:1px;transition:width .3s;box-shadow:0 0 4px var(--cyan);}
+.divider{border-top:1px solid rgba(0,242,255,0.1);margin:2px 0;}
+
+/* ── 학습 데이터 섹션 ── */
+.data-section{display:flex;flex-direction:column;gap:7px;flex:1;min-height:0;}
+.data-entry-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:4px;align-items:center;}
+.data-input-labels{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:4px;}
+.di-lbl{font-size:9px;color:var(--dim);letter-spacing:1px;text-align:center;}
+.data-input{background:rgba(0,0,0,0.45);border:1px solid rgba(0,242,255,0.18);color:var(--cyan);
+  padding:5px 4px;border-radius:4px;font-family:var(--font-mono);font-size:12px;
+  width:100%;text-align:center;outline:none;transition:border .2s;}
+.data-input:focus{border-color:var(--cyan);box-shadow:0 0 5px rgba(0,242,255,0.3);}
+.data-input.sun{border-color:rgba(57,255,20,0.3);color:var(--green);}
+.data-input.sun:focus{border-color:var(--green);box-shadow:0 0 5px rgba(57,255,20,0.3);}
+.btn-add{background:rgba(0,242,255,0.12);border:1px solid var(--cyan);color:var(--cyan);
+  width:27px;height:27px;border-radius:4px;font-size:15px;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0;}
+.btn-add:hover{background:rgba(0,242,255,0.25);box-shadow:var(--gc);}
+
+.data-table-wrap{flex:1;overflow-y:auto;min-height:50px;max-height:150px;}
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{font-size:9px;color:var(--dim);letter-spacing:1px;text-align:center;
+  padding:3px 2px;border-bottom:1px solid rgba(0,242,255,0.1);}
+.data-table td{font-size:11px;text-align:center;padding:4px 2px;
+  border-bottom:1px solid rgba(255,255,255,0.04);}
+.td-mar{color:var(--cyan)}.td-jun{color:#7ad4ff}.td-sep{color:#bb88ff}
+.td-sun{color:var(--green);font-family:var(--font-disp);font-weight:700;}
+.td-del{color:var(--pink);cursor:pointer;font-size:12px;background:none;border:none;padding:0 3px;}
+.td-del:hover{opacity:.6;}
+.no-data{text-align:center;color:var(--dim);font-size:11px;padding:14px 0;}
+
+.train-bar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.data-count{font-size:11px;color:var(--dim);}
+.data-count span{color:var(--cyan);font-family:var(--font-disp);}
+.train-status{font-size:10px;padding:3px 7px;border-radius:3px;letter-spacing:1px;}
+.train-status.idle{color:var(--dim);}
+.train-status.training{color:var(--yellow);animation:blink .5s infinite;}
+.train-status.done{color:var(--green);text-shadow:var(--gg);}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* ── 가중치 표시 ── */
+.weight-display{padding:9px;background:rgba(0,0,0,0.3);border-radius:6px;
+  border:1px solid rgba(112,0,255,0.25);}
+.wd-title{font-size:9px;color:var(--dim);letter-spacing:2px;margin-bottom:5px;}
+.wd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;}
+.wd-item{text-align:center;padding:5px 2px;border-radius:3px;background:rgba(0,0,0,0.35);}
+.wd-label{font-size:8px;color:var(--dim);letter-spacing:1px;}
+.wd-val{font-family:var(--font-disp);font-size:11px;}
+.wd-pos{color:var(--cyan);text-shadow:var(--gc);}
+.wd-neg{color:var(--pink);text-shadow:var(--gk);}
+
+/* ── 캔버스 패널 ── */
+#canvas-panel{position:relative;overflow:hidden;border-radius:12px;}
+#nn-canvas{width:100%;height:100%;display:block;}
+.canvas-label{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+  font-size:9px;color:var(--dim);letter-spacing:2px;text-transform:uppercase;}
+
+/* ── 우측 예측 패널 ── */
+#predict-panel{padding:16px;display:flex;flex-direction:column;gap:12px;}
+.scoreboard{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:rgba(0,0,0,0.4);border-radius:8px;border:1px solid rgba(0,242,255,0.1);
+  padding:16px 10px;position:relative;overflow:hidden;flex:1;}
+.scoreboard::before{content:'PREDICTED';position:absolute;top:9px;left:50%;transform:translateX(-50%);
+  font-size:9px;letter-spacing:4px;color:var(--dim);}
+.score-big{font-family:var(--font-disp);font-size:58px;font-weight:900;line-height:1;
+  color:var(--cyan);text-shadow:0 0 10px #00f2ff,0 0 30px #00f2ff,0 0 60px rgba(0,242,255,0.4);
+  transition:all .4s;}
+.score-unit{font-size:12px;font-family:var(--font-disp);color:var(--dim);margin-top:3px;letter-spacing:2px;}
+.score-grade{font-size:10px;margin-top:7px;padding:3px 11px;border-radius:20px;
+  font-family:var(--font-disp);letter-spacing:2px;}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.stat-item{padding:8px 6px;background:rgba(0,0,0,0.3);border-radius:6px;
+  border:1px solid rgba(255,255,255,0.04);text-align:center;}
+.stat-label{font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:3px;}
+.stat-value{font-family:var(--font-disp);font-size:16px;color:var(--purple);text-shadow:var(--gp);}
+.nav-buttons{display:flex;flex-direction:column;gap:6px;}
+
+/* ═══ PHASE 2 ═══ */
+#phase2{padding:16px;flex-direction:column;gap:12px;}
+.p2h{display:flex;align-items:center;justify-content:space-between;}
+.p2t{font-family:var(--font-disp);font-size:16px;color:var(--cyan);text-shadow:var(--gc);}
+.p2b{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:12px;min-height:0;}
+.formula-panel{padding:16px;display:flex;flex-direction:column;gap:12px;}
+.formula-display{font-family:var(--font-disp);font-size:18px;text-align:center;
+  padding:16px;background:rgba(0,0,0,0.5);border-radius:8px;
+  border:1px solid rgba(0,242,255,0.2);letter-spacing:2px;}
+.flow-container{flex:1;position:relative;background:rgba(0,0,0,0.3);border-radius:8px;
+  border:1px solid rgba(0,242,255,0.07);overflow:hidden;}
+#formula-canvas{width:100%;height:100%;}
+.weight-controls{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.wc-item{display:flex;flex-direction:column;gap:4px;}
+.wc-label{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);}
+.wc-val{color:var(--cyan);font-family:var(--font-disp);font-size:12px;}
+.activation-panel{padding:16px;display:flex;flex-direction:column;gap:12px;}
+.act-buttons{display:flex;gap:8px;}
+.act-btn{flex:1;padding:9px;background:rgba(0,0,0,0.3);border:1px solid var(--dim);
+  color:var(--dim);border-radius:6px;font-size:14px;font-family:var(--font-mono);
+  letter-spacing:2px;cursor:pointer;transition:all .3s;}
+.act-btn.active{border-color:var(--cyan);color:var(--cyan);background:rgba(0,242,255,0.1);box-shadow:var(--gc);}
+.act-graph{flex:1;position:relative;overflow:hidden;}
+#act-canvas{width:100%;height:100%;}
+.result-display{padding:10px 13px;background:rgba(0,0,0,0.4);border-radius:6px;
+  border:1px solid rgba(57,255,20,0.2);display:flex;align-items:center;gap:8px;}
+.result-label{font-size:10px;color:var(--dim);letter-spacing:2px;}
+.result-val{font-family:var(--font-disp);font-size:20px;color:var(--green);text-shadow:var(--gg);margin-left:auto;}
+
+/* ═══ PHASE 3 ═══ */
+#phase3{padding:16px;flex-direction:column;gap:12px;}
+.p3h{display:flex;align-items:center;justify-content:space-between;}
+.p3b{flex:1;display:grid;grid-template-columns:1fr 265px;gap:12px;min-height:0;}
+.bp-wrap{position:relative;overflow:hidden;border-radius:12px;}
+#bp-canvas{width:100%;height:100%;}
+.bp-side{display:flex;flex-direction:column;gap:9px;}
+.loss-display{padding:13px;text-align:center;}
+.loss-title{font-size:10px;color:var(--dim);letter-spacing:3px;margin-bottom:6px;}
+.loss-value{font-family:var(--font-disp);font-size:32px;font-weight:700;transition:all .3s;}
+.weight-table{padding:13px;flex:1;overflow-y:auto;}
+.wt-row{display:flex;justify-content:space-between;align-items:center;
+  padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;}
+.wt-name{color:var(--dim)}.wt-old{color:var(--dim);text-decoration:line-through;font-size:10px;}
+.wt-new{color:var(--green);font-family:var(--font-disp);font-size:12px;}
+.wt-arrow{color:var(--purple);font-size:10px;}
+.epoch-display{padding:13px;}
+.ep-label{font-size:10px;color:var(--dim);letter-spacing:2px;margin-bottom:5px;}
+.ep-bar-bg{height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;}
+.ep-bar-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));
+  border-radius:3px;transition:width .2s;box-shadow:0 0 6px var(--cyan);}
+.ep-count{font-family:var(--font-disp);font-size:20px;color:var(--cyan);text-shadow:var(--gc);margin-top:6px;}
+
+/* ── 로딩 ── */
+#loading{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;
+  flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .6s;}
+#loading.hide{opacity:0;pointer-events:none;}
+.loading-logo{font-family:var(--font-disp);font-size:24px;color:var(--cyan);
+  text-shadow:var(--gc);letter-spacing:4px;}
+.loading-bar-bg{width:200px;height:2px;background:rgba(0,242,255,0.1);}
+.loading-bar-fill{height:100%;background:var(--cyan);box-shadow:var(--gc);
+  animation:lprog 1.2s ease-out forwards;}
+@keyframes lprog{from{width:0}to{width:100%}}
+.loading-sub{font-size:10px;color:var(--dim);letter-spacing:3px;}
+#zoom-overlay{position:fixed;inset:0;z-index:900;
+  background:radial-gradient(circle at var(--ox,50%) var(--oy,50%),rgba(0,242,255,0.2) 0%,var(--bg) 60%);
+  opacity:0;pointer-events:none;transition:opacity .4s;}
+#zoom-overlay.show{opacity:1;}
+</style>
+</head>
+<body>
+<div id="loading">
+  <div class="loading-logo">수능 AI</div>
+  <div class="loading-bar-bg"><div class="loading-bar-fill"></div></div>
+  <div class="loading-sub">NEURAL NETWORK INITIALIZING...</div>
+</div>
+<div id="zoom-overlay"></div>
+<div id="app">
+
+<!-- ══════════════ PHASE 1 ══════════════ -->
+<div id="phase1" class="phase active">
+  <div class="header-bar">
+    <div>
+      <div class="header-title">수능 예측 AI</div>
+      <div class="header-sub">DEEP LEARNING SCORE PREDICTOR v3.1</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--dim);">
+      <div class="status-dot"></div>
+      <span id="model-status">모델 초기화됨</span>
+    </div>
+  </div>
+  <div class="main-grid">
+
+    <!-- 좌측: 예측 입력 + 학습 데이터 -->
+    <div id="input-panel" class="glass">
+
+      <div class="panel-title">🎯 예측 대상 — 나의 모의고사 점수</div>
+
+      <div class="score-input-item">
+        <div class="score-label">
+          <span class="score-name">🌸 3월 모의고사</span>
+          <span class="score-val" id="val-mar">72</span>
+        </div>
+        <input type="range" id="slider-mar" min="0" max="100" value="72">
+        <div class="bar-bg"><div class="bar-fill" id="bar-mar" style="width:72%"></div></div>
+      </div>
+      <div class="score-input-item">
+        <div class="score-label">
+          <span class="score-name">☀️ 6월 모의고사</span>
+          <span class="score-val" id="val-jun">81</span>
+        </div>
+        <input type="range" id="slider-jun" min="0" max="100" value="81">
+        <div class="bar-bg"><div class="bar-fill" id="bar-jun" style="width:81%"></div></div>
+      </div>
+      <div class="score-input-item">
+        <div class="score-label">
+          <span class="score-name">🍂 9월 모의고사</span>
+          <span class="score-val" id="val-sep">86</span>
+        </div>
+        <input type="range" id="slider-sep" min="0" max="100" value="86">
+        <div class="bar-bg"><div class="bar-fill" id="bar-sep" style="width:86%"></div></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ── 학습 데이터 입력 ── -->
+      <div class="data-section">
+        <div class="panel-title" style="margin-bottom:2px;">
+          📊 실제 수능 데이터 입력
+          <span style="color:rgba(57,255,20,0.5);font-size:9px;margin-left:6px;">→ 가중치 자동 학습</span>
+        </div>
+
+        <div class="data-input-labels">
+          <div class="di-lbl">3월</div>
+          <div class="di-lbl">6월</div>
+          <div class="di-lbl">9월</div>
+          <div class="di-lbl" style="color:rgba(57,255,20,0.65)">실제수능</div>
+          <div></div>
+        </div>
+        <div class="data-entry-row">
+          <input class="data-input" id="d-mar" type="number" min="0" max="100" placeholder="0~100">
+          <input class="data-input" id="d-jun" type="number" min="0" max="100" placeholder="0~100">
+          <input class="data-input" id="d-sep" type="number" min="0" max="100" placeholder="0~100">
+          <input class="data-input sun" id="d-sun" type="number" min="0" max="100" placeholder="수능">
+          <button class="btn-add" onclick="addData()" title="추가 (Enter)">+</button>
+        </div>
+
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th><th>3월</th><th>6월</th><th>9월</th>
+                <th style="color:rgba(57,255,20,0.7)">수능</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="data-tbody">
+              <tr><td colspan="6" class="no-data">데이터를 입력해 가중치를 학습시켜보세요</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="train-bar">
+          <div class="data-count"><span id="d-count">0</span>개</div>
+          <span class="train-status idle" id="train-status">미학습</span>
+          <button class="btn-y" onclick="trainOnData()" style="margin-left:auto;">⚡ 가중치 학습</button>
+        </div>
+
+        <!-- 학습된 가중치 -->
+        <div class="weight-display" id="weight-display" style="display:none">
+          <div class="wd-title">학습된 출력층 가중치 W₂</div>
+          <div class="wd-grid" id="wd-grid"></div>
+          <div style="margin-top:7px;">
+            <div class="wd-title" style="margin-bottom:4px;">입력층 가중치 W₁ (행=입력, 열=은닉)</div>
+            <div id="wd-w1" style="font-size:10px;color:var(--dim);line-height:1.7;font-family:var(--font-mono);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 중앙: 신경망 캔버스 -->
+    <div id="canvas-panel" class="glass">
+      <canvas id="nn-canvas"></canvas>
+      <div class="canvas-label">INPUT → HIDDEN → OUTPUT &nbsp;|&nbsp; 노드 클릭 시 상세 보기</div>
+    </div>
+
+    <!-- 우측: 예측 결과 -->
+    <div id="predict-panel" class="glass">
+      <div class="panel-title">수능 예측 결과</div>
+      <div class="scoreboard glass">
+        <div class="score-big" id="pred-score">87</div>
+        <div class="score-unit">/ 100점</div>
+        <div class="score-grade" id="pred-grade">1등급</div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-item">
+          <div class="stat-label">LOSS</div>
+          <div class="stat-value" id="stat-loss">—</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">EPOCH</div>
+          <div class="stat-value" id="stat-epoch">—</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">SAMPLES</div>
+          <div class="stat-value" id="stat-samples">0</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">신뢰도</div>
+          <div class="stat-value" id="stat-conf">—</div>
+        </div>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn-c" onclick="goPhase(2)" style="width:100%;font-size:10px;">▶ 노드 상세 보기</button>
+        <button class="btn-g" onclick="goPhase(3)" style="width:100%;">⚡ 역전파 시각화</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ PHASE 2 ══════════════ -->
+<div id="phase2" class="phase">
+  <div class="p2h">
+    <button class="btn-c" onclick="goPhase(1)">← 뒤로</button>
+    <div class="p2t">NODE DETAIL — <span id="node-label">H1</span></div>
+    <button class="btn-c" onclick="goPhase(3)">역전파 →</button>
+  </div>
+  <div class="p2b">
+    <div class="formula-panel glass">
+      <div class="panel-title">선형 연산 시각화</div>
+      <div class="formula-display">
+        z = <span style="color:var(--cyan)" id="fw">w</span>
+        × <span style="color:var(--yellow)" id="fx">x</span>
+        + <span style="color:var(--pink)" id="fb">b</span>
+        = <span style="color:var(--green)" id="fz">?</span>
+      </div>
+      <div class="flow-container"><canvas id="formula-canvas"></canvas></div>
+      <div class="weight-controls">
+        <div class="wc-item">
+          <div class="wc-label"><span>가중치 w</span><span class="wc-val" id="wc-w">0.64</span></div>
+          <input type="range" id="wc-slider-w" min="-2" max="2" step="0.01" value="0.64">
+        </div>
+        <div class="wc-item">
+          <div class="wc-label"><span>편향 b</span><span class="wc-val" id="wc-b">0.12</span></div>
+          <input type="range" id="wc-slider-b" min="-1" max="1" step="0.01" value="0.12">
+        </div>
+      </div>
+    </div>
+    <div class="activation-panel glass">
+      <div class="panel-title">활성화 함수 (Activation Function)</div>
+      <div class="act-buttons">
+        <button class="act-btn active" id="btn-relu" onclick="setAct('relu')">ReLU</button>
+        <button class="act-btn" id="btn-sigmoid" onclick="setAct('sigmoid')">Sigmoid</button>
+      </div>
+      <div class="act-graph"><canvas id="act-canvas"></canvas></div>
+      <div style="font-size:11px;color:var(--dim);padding:4px 0;line-height:1.7;" id="act-desc">
+        <span style="color:var(--cyan)">ReLU</span>: max(0, z) —
+        0 이하의 값을 버리고 0 이상만 통과시킵니다.<br>
+        은닉층의 표준 활성화 함수입니다.
+      </div>
+      <div class="result-display glass">
+        <span class="result-label">OUTPUT  a =</span>
+        <span class="result-val" id="act-result">0.0000</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ PHASE 3 ══════════════ -->
+<div id="phase3" class="phase">
+  <div class="p3h">
+    <button class="btn-c" onclick="goPhase(1)">← 대시보드</button>
+    <div class="p2t" style="font-size:14px;">BACKPROPAGATION SIMULATOR</div>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <span style="font-size:10px;color:var(--dim);letter-spacing:1px;">배속</span>
+      <button class="speed-btn active" id="spd-1"  onclick="setSpeed(1)">1×</button>
+      <button class="speed-btn"        id="spd-2"  onclick="setSpeed(2)">2×</button>
+      <button class="speed-btn"        id="spd-5"  onclick="setSpeed(5)">5×</button>
+      <button class="speed-btn"        id="spd-10" onclick="setSpeed(10)">10×</button>
+      <button class="btn-p" onclick="resetBP()">RESET</button>
+      <button class="btn-g" id="btn-learn" onclick="startLearn()" style="padding:8px 18px;font-size:12px;">▶ 학습</button>
+    </div>
+  </div>
+  <div class="p3b">
+    <div class="bp-wrap glass"><canvas id="bp-canvas"></canvas></div>
+    <div class="bp-side">
+      <div class="loss-display glass">
+        <div class="loss-title">LOSS (오차)</div>
+        <div class="loss-value" id="bp-loss" style="color:var(--pink);text-shadow:var(--gk);">—</div>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px;">MSE = (예측 − 실제)²</div>
+      </div>
+      <div class="epoch-display glass">
+        <div class="ep-label">EPOCH 진행률</div>
+        <div class="ep-bar-bg"><div class="ep-bar-fill" id="ep-bar" style="width:0%"></div></div>
+        <div class="ep-count" id="ep-count">0 / 100</div>
+      </div>
+      <div class="weight-table glass" style="flex:1">
+        <div class="panel-title" style="margin-bottom:6px">가중치 업데이트</div>
+        <div id="weight-list"></div>
+      </div>
+      <div class="glass" style="padding:10px;font-size:11px;color:var(--dim);line-height:1.7;">
+        <div style="color:var(--purple);margin-bottom:2px;letter-spacing:2px;font-size:9px;">학습 원리</div>
+        빛이 출력→입력 방향으로 역류하며 각 가중치의 오차 기여도를 계산합니다.<br>
+        <span style="color:var(--green)">w ← w − lr × ∂L/∂w</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- #app -->
+
+<script>
+/* ══════════════════════════════════════════
+   유틸
+══════════════════════════════════════════ */
+const $=id=>document.getElementById(id);
+const lerp=(a,b,t)=>a+(b-a)*t;
+const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+
+/* ══════════════════════════════════════════
+   화면 전환
+══════════════════════════════════════════ */
+let cur=1;
+function goPhase(n,ox,oy){
+  if(n===cur)return;
+  const ov=$('zoom-overlay');
+  if(ox!==undefined){ov.style.setProperty('--ox',ox+'px');ov.style.setProperty('--oy',oy+'px');}
+  ov.classList.add('show');
+  setTimeout(()=>{
+    document.querySelectorAll('.phase').forEach(p=>p.classList.remove('active'));
+    $('phase'+n).classList.add('active'); cur=n;
+    if(n===2)initP2();
+    if(n===3)initP3();
+    setTimeout(()=>ov.classList.remove('show'),380);
+  },280);
+}
+
+/* ══════════════════════════════════════════
+   NeuralNetwork 클래스
+   구조: 3입력 → 4은닉(ReLU/Sigmoid) → 1출력(Sigmoid)
+══════════════════════════════════════════ */
+class NN {
+  constructor(){
+    /* 입력층→은닉층 가중치 [입력3 × 은닉4] */
+    this.w1=[
+      [ 0.52,-0.31, 0.74, 0.18],
+      [ 0.64, 0.42,-0.21, 0.88],
+      [-0.15, 0.77, 0.33,-0.59]
+    ];
+    this.b1=[0.12,-0.08,0.15,0.03];
+    /* 은닉층→출력층 가중치 [은닉4] */
+    this.w2=[0.81,0.56,-0.22,0.93];
+    this.b2=0.07;
+    this.act='relu';
+    this.lr=0.05;
+    /* 순전파 중간값 */
+    this.z1=new Array(4).fill(0);
+    this.a1=new Array(4).fill(0);
+    this.z2=0; this.a2=0;
+    this.inp=[0,0,0];
+  }
+  relu(x){return Math.max(0,x);}       // "0 이하를 버리는 함수"
+  reluD(x){return x>0?1:0;}
+  sig(x){return 1/(1+Math.exp(-x));}   // "0~1 사이로 압축하는 함수"
+  sigD(x){const s=this.sig(x);return s*(1-s);}
+  act_(x){return this.act==='relu'?this.relu(x):this.sig(x);}
+  actD(x){return this.act==='relu'?this.reluD(x):this.sigD(x);}
+
+  /* ── 순전파: z = w·x + b,  a = activation(z) ── */
+  forward(inp){
+    this.inp=inp;
+    for(let j=0;j<4;j++){
+      // "각 입력값에 가중치를 곱하고 편향을 더합니다"
+      this.z1[j]=inp[0]*this.w1[0][j]+inp[1]*this.w1[1][j]+inp[2]*this.w1[2][j]+this.b1[j];
+      this.a1[j]=this.act_(this.z1[j]); // 활성화 함수 통과
+    }
+    // "출력층은 항상 Sigmoid → 0~1 확률로 변환"
+    this.z2=this.a1.reduce((s,a,j)=>s+a*this.w2[j],this.b2);
+    this.a2=this.sig(this.z2);
+    return this.a2;
+  }
+
+  predict(mar,jun,sep){
+    return Math.round(this.forward([mar/100,jun/100,sep/100])*100);
+  }
+
+  /* ── 역전파: 오차를 출력층에서 입력층으로 전달 ── */
+  backward(target){
+    const lr=this.lr, p=this.a2;
+    const loss=(p-target)**2;  // MSE 손실함수
+    const w2old=[...this.w2];
+    // 출력층 기울기: dL/dz2
+    const dz2=2*(p-target)*p*(1-p); // sigmoid 미분 포함
+    // "가중치를 기울기 방향 반대로 조금씩 이동"
+    for(let j=0;j<4;j++) this.w2[j]-=lr*dz2*this.a1[j];
+    this.b2-=lr*dz2;
+    // 은닉층 기울기: dL/dz1
+    for(let i=0;i<3;i++)
+      for(let j=0;j<4;j++){
+        const dz1=(dz2*this.w2[j])*this.actD(this.z1[j]);
+        this.w1[i][j]-=lr*dz1*this.inp[i];
+      }
+    for(let j=0;j<4;j++){
+      const dz1=(dz2*this.w2[j])*this.actD(this.z1[j]);
+      this.b1[j]-=lr*dz1;
+    }
+    return {loss,w2old};
+  }
+}
+const nn=new NN();
+
+/* ══════════════════════════════════════════
+   학습 데이터 관리
+══════════════════════════════════════════ */
+let trainData=[];
+let trained=false;
+
+function addData(){
+  const v=[+$('d-mar').value,+$('d-jun').value,+$('d-sep').value,+$('d-sun').value];
+  if(v.some(x=>isNaN(x)||x<0||x>100)){
+    // 잘못된 입력 하이라이트
+    ['d-mar','d-jun','d-sep','d-sun'].forEach(id=>{
+      const el=$(id);
+      el.style.borderColor='var(--pink)';
+      setTimeout(()=>{el.style.borderColor='';},700);
+    });
+    return;
+  }
+  trainData.push({mar:v[0],jun:v[1],sep:v[2],sun:v[3]});
+  ['d-mar','d-jun','d-sep','d-sun'].forEach(id=>{$(id).value='';});
+  $('d-mar').focus();
+  renderTable(); trained=false; setStatus('idle');
+}
+
+function removeData(i){trainData.splice(i,1);renderTable();trained=false;setStatus('idle');}
+
+function renderTable(){
+  $('d-count').textContent=trainData.length;
+  $('stat-samples').textContent=trainData.length;
+  const tb=$('data-tbody');
+  if(!trainData.length){
+    tb.innerHTML='<tr><td colspan="6" class="no-data">데이터를 입력해 가중치를 학습시켜보세요</td></tr>';
+    return;
+  }
+  tb.innerHTML=trainData.map((d,i)=>`
+    <tr>
+      <td style="color:var(--dim);font-size:10px">${i+1}</td>
+      <td class="td-mar">${d.mar}</td>
+      <td class="td-jun">${d.jun}</td>
+      <td class="td-sep">${d.sep}</td>
+      <td class="td-sun">${d.sun}</td>
+      <td><button class="td-del" onclick="removeData(${i})">✕</button></td>
+    </tr>`).join('');
+}
+
+function setStatus(s,txt=''){
+  const el=$('train-status');
+  el.className='train-status '+s;
+  el.textContent=s==='idle'?'미학습':s==='training'?'학습중...':txt||'완료';
+}
+
+/* ── 가중치 학습 실행 ── */
+function trainOnData(){
+  if(!trainData.length){
+    setStatus('idle'); $('train-status').textContent='⚠ 데이터 없음';
+    $('train-status').style.color='var(--pink)';
+    setTimeout(()=>{setStatus('idle');$('train-status').style.color='';},1500);
+    return;
+  }
+  setStatus('training');
+  $('model-status').textContent='학습중...';
+
+  let ep=0; const EPOCHS=1000;
+  let finalLoss=0;
+
+  // 비동기 학습 (UI 블로킹 방지)
+  function step(){
+    for(let s=0;s<30&&ep<EPOCHS;s++,ep++){
+      let eL=0;
+      // 모든 학습 샘플로 순전파 + 역전파
+      for(const d of trainData){
+        nn.forward([d.mar/100,d.jun/100,d.sep/100]);
+        const{loss}=nn.backward(d.sun/100);
+        eL+=loss;
+      }
+      finalLoss=eL/trainData.length;
+    }
+    if(ep<EPOCHS){requestAnimationFrame(step);}
+    else{onDone(finalLoss);}
+  }
+  requestAnimationFrame(step);
+}
+
+function onDone(loss){
+  trained=true;
+  const lossStr=loss.toFixed(4);
+  setStatus('done',`완료 | loss: ${lossStr}`);
+  $('stat-loss').textContent=lossStr;
+  $('stat-epoch').textContent='1000';
+  $('model-status').textContent='학습 완료 ✓';
+  const conf=clamp(Math.round((1-Math.sqrt(loss))*100),40,99);
+  $('stat-conf').textContent=conf+'%';
+  showWeights(); updatePred();
+}
+
+function showWeights(){
+  $('weight-display').style.display='block';
+  // W2
+  $('wd-grid').innerHTML=nn.w2.map((w,j)=>`
+    <div class="wd-item">
+      <div class="wd-label">w₂[${j}]</div>
+      <div class="wd-val ${w>=0?'wd-pos':'wd-neg'}">${w.toFixed(3)}</div>
+    </div>`).join('');
+  // W1 요약
+  const labels=['3월','6월','9월'];
+  $('wd-w1').innerHTML=nn.w1.map((row,i)=>
+    `<span style="color:${['#00f2ff','#7ad4ff','#bb88ff'][i]}">${labels[i]}:</span> `+
+    row.map(w=>`<span style="${w>=0?'color:#00f2ff':'color:#ff2d78'}">${w.toFixed(2)}</span>`).join(' ')
+  ).join('<br>');
+}
+
+/* Enter 키 */
+['d-mar','d-jun','d-sep','d-sun'].forEach(id=>{
+  $(id).addEventListener('keydown',e=>{if(e.key==='Enter')addData();});
+});
+
+/* ══════════════════════════════════════════
+   예측 업데이트
+══════════════════════════════════════════ */
+function getSliders(){return[+$('slider-mar').value,+$('slider-jun').value,+$('slider-sep').value];}
+
+function getGrade(s){
+  return s>=96?'1등급':s>=89?'2등급':s>=77?'3등급':
+         s>=60?'4등급':s>=40?'5등급':s>=23?'6등급':
+         s>=11?'7등급':s>=4?'8등급':'9등급';
+}
+const GC={
+  '1등급':['#39ff14','var(--gg)'],'2등급':['#00f2ff','var(--gc)'],
+  '3등급':['#7ad4ff','0 0 8px #7ad4ff'],'4등급':['#ffdd00','0 0 8px #ffdd00'],
+  '5등급':['#ff9900','0 0 8px #ff9900'],'6등급':['#ff6600','0 0 8px #ff6600'],
+  '7등급':['#ff4444','0 0 8px #ff4444'],'8등급':['#ff2d78','var(--gk)'],
+  '9등급':['#cc0033','0 0 8px #cc0033']
+};
+
+function updatePred(){
+  const[mar,jun,sep]=getSliders();
+  $('val-mar').textContent=mar; $('val-jun').textContent=jun; $('val-sep').textContent=sep;
+  $('bar-mar').style.width=mar+'%'; $('bar-jun').style.width=jun+'%'; $('bar-sep').style.width=sep+'%';
+  const pred=nn.predict(mar,jun,sep);
+  const g=getGrade(pred); const[gc,gs]=GC[g];
+  $('pred-score').textContent=pred;
+  $('pred-score').style.color=gc;
+  $('pred-score').style.textShadow=`0 0 10px ${gc},0 0 30px ${gc}`;
+  $('pred-grade').textContent=g;
+  $('pred-grade').style.cssText=`color:${gc};border:1px solid ${gc};text-shadow:${gs};`+
+    `font-family:var(--font-disp);font-size:10px;letter-spacing:2px;`+
+    `padding:3px 12px;border-radius:20px;margin-top:8px;`;
+}
+['slider-mar','slider-jun','slider-sep'].forEach(id=>$(id).addEventListener('input',updatePred));
+
+/* ══════════════════════════════════════════
+   신경망 캔버스
+══════════════════════════════════════════ */
+const nnC=$('nn-canvas'), nnX=nnC.getContext('2d');
+let parts=[], npos={};
+
+class Part{
+  constructor(sx,sy,ex,ey,spd,col,r){
+    this.sx=sx;this.sy=sy;this.ex=ex;this.ey=ey;
+    this.t=Math.random();this.spd=spd;this.col=col;this.r=r;
+  }
+  step(){this.t+=this.spd*.007;if(this.t>1)this.t=0;}
+  draw(ctx){
+    const x=lerp(this.sx,this.ex,this.t),y=lerp(this.sy,this.ey,this.t);
+    ctx.save();ctx.shadowColor=this.col;ctx.shadowBlur=10;
+    ctx.fillStyle=this.col;ctx.globalAlpha=.75-Math.abs(this.t-.5)*.35;
+    ctx.beginPath();ctx.arc(x,y,this.r,0,Math.PI*2);ctx.fill();ctx.restore();
+  }
+}
+
+function buildParts(){
+  parts=[];
+  if(!npos.input)return;
+  for(let i=0;i<3;i++) for(let j=0;j<4;j++){
+    const s=clamp(Math.abs(nn.w1[i][j])*2.5+.5,.4,3);
+    for(let k=0;k<Math.ceil(s);k++){
+      const p=new Part(npos.input[i].x,npos.input[i].y,npos.hidden[j].x,npos.hidden[j].y,s,'#7000ff',2);
+      p.t=k/Math.ceil(s); parts.push(p);
+    }
+  }
+  for(let j=0;j<4;j++){
+    const s=clamp(Math.abs(nn.w2[j])*2+.5,.5,3);
+    const c=trained?'#39ff14':'#00f2ff';
+    for(let k=0;k<2;k++){
+      const p=new Part(npos.hidden[j].x,npos.hidden[j].y,npos.output[0].x,npos.output[0].y,s,c,2.5);
+      p.t=k/2; parts.push(p);
+    }
+  }
+}
+
+function resizeNN(){
+  const el=$('canvas-panel');
+  nnC.width=el.clientWidth; nnC.height=el.clientHeight;
+  buildParts();
+}
+
+function drawNode(ctx,x,y,r,lbl,val,col,active=false){
+  ctx.save();
+  ctx.shadowColor=col; ctx.shadowBlur=active?22:10;
+  const g=ctx.createRadialGradient(x,y,0,x,y,r);
+  g.addColorStop(0,col+(active?'44':'1a')); g.addColorStop(1,'transparent');
+  ctx.fillStyle=g; ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle=col; ctx.lineWidth=active?2.5:1.5;
+  ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.stroke();
+  ctx.fillStyle=col; ctx.font='bold 10px Share Tech Mono';
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(lbl,x,y-5);
+  ctx.fillStyle='#ffffff70'; ctx.font='9px Share Tech Mono';
+  ctx.fillText(val,x,y+7);
+  ctx.restore();
+}
+
+function drawEdge(ctx,x1,y1,x2,y2,w,green=false,a=.25){
+  const abs=Math.abs(w);
+  const col=green?'#39ff14':abs>.5?'#7000ff':'#4400aa';
+  ctx.save();
+  ctx.globalAlpha=a+abs*.18; ctx.shadowColor=col; ctx.shadowBlur=abs*7;
+  ctx.strokeStyle=col; ctx.lineWidth=clamp(abs*2,.5,3);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  ctx.restore();
+}
+
+function drawNN(bp=false){
+  const W=nnC.width,H=nnC.height;
+  const[mar,jun,sep]=getSliders();
+  nn.predict(mar,jun,sep);
+  nnX.clearRect(0,0,W,H);
+  const lx={i:.18,h:.42,o:.75};
+  const iY=[.25,.5,.75],hY=[.2,.4,.6,.8];
+  npos.input=iY.map(y=>({x:lx.i*W,y:y*H}));
+  npos.hidden=hY.map(y=>({x:lx.h*W,y:y*H}));
+  npos.output=[{x:lx.o*W,y:H*.5}];
+  const r=Math.min(W,H)*.046;
+  // 엣지
+  for(let i=0;i<3;i++) for(let j=0;j<4;j++)
+    drawEdge(nnX,npos.input[i].x,npos.input[i].y,npos.hidden[j].x,npos.hidden[j].y,nn.w1[i][j],bp);
+  for(let j=0;j<4;j++)
+    drawEdge(nnX,npos.hidden[j].x,npos.hidden[j].y,npos.output[0].x,npos.output[0].y,nn.w2[j],trained,.3);
+  parts.forEach(p=>{p.step();p.draw(nnX);});
+  // 노드
+  [mar,jun,sep].forEach((v,i)=>drawNode(nnX,npos.input[i].x,npos.input[i].y,r,['3월','6월','9월'][i],v+'점','#00f2ff',true));
+  ['H1','H2','H3','H4'].forEach((lb,j)=>drawNode(nnX,npos.hidden[j].x,npos.hidden[j].y,r,lb,nn.a1[j].toFixed(2),'#7000ff'));
+  const oc=trained?'#39ff14':'#00f2ff';
+  drawNode(nnX,npos.output[0].x,npos.output[0].y,r*1.2,'예측',Math.round(nn.a2*100)+'점',oc,true);
+  // 레이어 헤더
+  [['입력층',lx.i],['은닉층',lx.h],['출력층',lx.o]].forEach(([lb,x])=>{
+    nnX.fillStyle='#ffffff16';nnX.font='10px Share Tech Mono';nnX.textAlign='center';
+    nnX.fillText(lb,x*W,17);
+  });
+}
+
+nnC.addEventListener('click',e=>{
+  const rect=nnC.getBoundingClientRect();
+  const mx=(e.clientX-rect.left)*(nnC.width/rect.width);
+  const my=(e.clientY-rect.top)*(nnC.height/rect.height);
+  const r=Math.min(nnC.width,nnC.height)*.046;
+  const chk=(nodes,lbls)=>{
+    for(let i=0;i<nodes.length;i++){
+      const dx=mx-nodes[i].x,dy=my-nodes[i].y;
+      if(dx*dx+dy*dy<(r*1.5)**2)return lbls[i];
+    }
+    return null;
+  };
+  const hit=chk(npos.hidden||[],['H1','H2','H3','H4'])||
+            chk(npos.output||[],['OUT'])||
+            chk(npos.input||[],['3월','6월','9월']);
+  if(hit){$('node-label').textContent=hit;goPhase(2,e.clientX,e.clientY);}
+});
+
+function mainLoop(){
+  if(cur===1){drawNN();buildParts();}
+  requestAnimationFrame(mainLoop);
+}
+
+/* ══════════════════════════════════════════
+   Phase 2: 연산 시각화 & 활성화 함수
+══════════════════════════════════════════ */
+let curAct='relu';
+const fC=$('formula-canvas'),fX=fC.getContext('2d');
+const aC=$('act-canvas'),aX=aC.getContext('2d');
+
+function initP2(){
+  fC.width=fC.parentElement.clientWidth; fC.height=fC.parentElement.clientHeight;
+  aC.width=aC.parentElement.clientWidth; aC.height=aC.parentElement.clientHeight;
+  updateFormula(); drawActGraph();
+}
+
+function updateFormula(){
+  const w=+$('wc-slider-w').value,b=+$('wc-slider-b').value;
+  const[mar,jun,sep]=getSliders();
+  const x=(mar+jun+sep)/(300);
+  const z=w*x+b;
+  const a=curAct==='relu'?Math.max(0,z):1/(1+Math.exp(-z));
+  $('wc-w').textContent=w.toFixed(2); $('wc-b').textContent=b.toFixed(2);
+  $('fw').textContent=w.toFixed(2); $('fx').textContent=x.toFixed(2);
+  $('fb').textContent=b.toFixed(2); $('fz').textContent=z.toFixed(3);
+  $('act-result').textContent=a.toFixed(4);
+  drawFlow(w,x,b,z);
+}
+
+function drawFlow(w,x,b,z){
+  const W=fC.width,H=fC.height; fX.clearRect(0,0,W,H);
+  const cy=H/2;
+  const ns=[
+    {x:W*.14,label:'x',val:x.toFixed(2),col:'#ffdd00'},
+    {x:W*.38,label:'×w',val:(w>=0?'+':'')+w.toFixed(2),col:'#00f2ff'},
+    {x:W*.62,label:'+b',val:(b>=0?'+':'')+b.toFixed(2),col:'#ff2d78'},
+    {x:W*.86,label:'z',val:z.toFixed(2),col:'#39ff14'},
+  ];
+  for(let i=0;i<3;i++){
+    fX.save();fX.strokeStyle='rgba(255,255,255,0.1)';fX.lineWidth=1.5;fX.setLineDash([4,5]);
+    fX.beginPath();fX.moveTo(ns[i].x+22,cy);fX.lineTo(ns[i+1].x-22,cy);fX.stroke();fX.restore();
+  }
+  ns.forEach(n=>{
+    fX.save();fX.shadowColor=n.col;fX.shadowBlur=13;
+    fX.strokeStyle=n.col;fX.lineWidth=1.5;
+    fX.beginPath();fX.arc(n.x,cy,22,0,Math.PI*2);fX.stroke();
+    fX.fillStyle=n.col+'1a';fX.fill();
+    fX.fillStyle=n.col;fX.font='bold 10px Share Tech Mono';
+    fX.textAlign='center';fX.textBaseline='middle';
+    fX.fillText(n.label,n.x,cy-6);
+    fX.fillStyle='#fff';fX.font='9px Share Tech Mono';fX.fillText(n.val,n.x,cy+7);
+    fX.restore();
+  });
+}
+
+function setAct(t){
+  curAct=t; nn.act=t;
+  ['relu','sigmoid'].forEach(k=>$('btn-'+k).classList.toggle('active',k===t));
+  $('act-desc').innerHTML=t==='relu'
+    ?'<span style="color:var(--cyan)">ReLU</span>: max(0, z) — 0 이하의 값을 버리고 0 이상만 통과시킵니다. 은닉층의 표준 활성화 함수!'
+    :'<span style="color:var(--yellow)">Sigmoid</span>: 1/(1+e⁻ᶻ) — 어떤 값도 0~1 사이로 압축합니다. 출력층 또는 이진 분류에 사용!';
+  drawActGraph(); updateFormula();
+}
+
+function drawActGraph(){
+  const W=aC.width,H=aC.height; aX.clearRect(0,0,W,H);
+  const px=W*.5,py=H*.5,sc=Math.min(W,H)*.34;
+  aX.save();aX.strokeStyle='rgba(255,255,255,0.06)';aX.lineWidth=1;
+  for(let g=-3;g<=3;g++){
+    aX.beginPath();aX.moveTo(px+g*sc/3,0);aX.lineTo(px+g*sc/3,H);aX.stroke();
+    aX.beginPath();aX.moveTo(0,py-g*sc/3);aX.lineTo(W,py-g*sc/3);aX.stroke();
+  }
+  aX.strokeStyle='rgba(255,255,255,0.18)';aX.lineWidth=1.5;
+  aX.beginPath();aX.moveTo(0,py);aX.lineTo(W,py);aX.stroke();
+  aX.beginPath();aX.moveTo(px,0);aX.lineTo(px,H);aX.stroke();
+  aX.restore();
+  const col=curAct==='relu'?'#00f2ff':'#ffdd00';
+  aX.save();aX.shadowColor=col;aX.shadowBlur=12;aX.strokeStyle=col;aX.lineWidth=2.5;
+  aX.beginPath();
+  for(let i=0;i<W;i++){
+    const xv=(i-px)/(sc/3);
+    const yv=curAct==='relu'?Math.max(0,xv):1/(1+Math.exp(-xv*3));
+    i===0?aX.moveTo(i,py-yv*sc):aX.lineTo(i,py-yv*sc);
+  }
+  aX.stroke();aX.restore();
+  // 현재 포인트
+  const w=+$('wc-slider-w').value,b=+$('wc-slider-b').value;
+  const[mar,jun,sep]=getSliders();
+  const z=w*(mar+jun+sep)/300+b;
+  const a=curAct==='relu'?Math.max(0,z):1/(1+Math.exp(-z*3));
+  aX.save();aX.shadowColor='#39ff14';aX.shadowBlur=18;aX.fillStyle='#39ff14';
+  aX.beginPath();aX.arc(px+z*sc/3,py-a*sc,5,0,Math.PI*2);aX.fill();aX.restore();
+}
+
+$('wc-slider-w').addEventListener('input',()=>{updateFormula();drawActGraph();});
+$('wc-slider-b').addEventListener('input',()=>{updateFormula();drawActGraph();});
+
+/* ══════════════════════════════════════════
+   Phase 3: 역전파 시뮬레이터
+══════════════════════════════════════════ */
+const bpC=$('bp-canvas'),bpX=bpC.getContext('2d');
+let bpParts=[],isLearn=false,ep=0;
+const MAX_EP=100;
+let bpAnim=null,tgtScore=90,spd=1;
+
+function setSpeed(s){
+  spd=s;
+  [1,2,5,10].forEach(v=>{const el=$('spd-'+v);if(el)el.classList.toggle('active',v===s);});
+}
+
+class BPP{
+  constructor(sx,sy,ex,ey,dl=0){
+    this.sx=sx;this.sy=sy;this.ex=ex;this.ey=ey;
+    this.t=0;this.spd=.04;this.dl=dl;this.on=false;this.done=false;
+  }
+  step(){if(this.dl>0){this.dl--;return;}this.on=true;this.t=Math.min(1,this.t+this.spd);if(this.t>=1)this.done=true;}
+  draw(ctx){
+    if(!this.on)return;
+    for(let i=0;i<5;i++){
+      const tt=Math.max(0,this.t-i*.14);
+      ctx.save();ctx.shadowColor='#39ff14';ctx.shadowBlur=13-i*2;
+      ctx.fillStyle=`rgba(57,255,20,${.8-i*.14})`;
+      ctx.beginPath();ctx.arc(lerp(this.sx,this.ex,tt),lerp(this.sy,this.ey,tt),3-i*.4,0,Math.PI*2);
+      ctx.fill();ctx.restore();
+    }
+  }
+}
+
+function initP3(){
+  bpC.width=bpC.parentElement.clientWidth;
+  bpC.height=bpC.parentElement.clientHeight;
+  resetBP();
+}
+
+function resetBP(){
+  isLearn=false;ep=0;bpParts=[];
+  $('btn-learn').textContent='▶ 학습';
+  $('ep-bar').style.width='0%';$('ep-count').textContent='0 / '+MAX_EP;
+  const[mar,jun,sep]=getSliders();
+  nn.forward([mar/100,jun/100,sep/100]);
+  const l=((nn.a2-tgtScore/100)**2);
+  $('bp-loss').textContent=l.toFixed(4);$('bp-loss').style.color='var(--pink)';
+  $('weight-list').innerHTML='<div style="color:var(--dim);font-size:11px;text-align:center;padding:10px">학습 시작 전</div>';
+  drawBP();
+  if(bpAnim){cancelAnimationFrame(bpAnim);bpAnim=null;}
+}
+
+function startLearn(){
+  if(isLearn){resetBP();return;}
+  isLearn=true;$('btn-learn').textContent='■ 정지';
+  // 학습 데이터 있으면 평균 수능 점수를 목표로
+  tgtScore=trainData.length
+    ?Math.round(trainData.reduce((s,d)=>s+d.sun,0)/trainData.length)
+    :+$('slider-sep').value+2;
+  runEp();
+}
+
+function runEp(){
+  if(!isLearn||ep>=MAX_EP){isLearn=false;$('btn-learn').textContent='▶ 학습';return;}
+  const[mar,jun,sep]=getSliders();
+  let lLoss=0,lW2old=null;
+  for(let s=0;s<spd&&ep<MAX_EP;s++,ep++){
+    nn.forward([mar/100,jun/100,sep/100]);
+    const{loss,w2old}=nn.backward(tgtScore/100);
+    lLoss=loss;lW2old=w2old;
+  }
+  const pct=ep/MAX_EP*100;
+  $('ep-bar').style.width=pct+'%';$('ep-count').textContent=ep+' / '+MAX_EP;
+  const lc=lLoss<.01?'var(--green)':lLoss<.05?'var(--yellow)':'var(--pink)';
+  $('bp-loss').textContent=lLoss.toFixed(4);$('bp-loss').style.color=lc;
+  if(lW2old)
+    $('weight-list').innerHTML=nn.w2.map((w,j)=>`
+      <div class="wt-row">
+        <span class="wt-name">w₂[${j}]</span>
+        <span class="wt-old">${lW2old[j].toFixed(3)}</span>
+        <span class="wt-arrow">→</span>
+        <span class="wt-new">${w.toFixed(3)}</span>
+      </div>`).join('');
+  if(spd>=5){drawBP();setTimeout(()=>runEp(),spd>=10?0:20);return;}
+  const W=bpC.width,H=bpC.height;
+  const oX=W*.75,hX=W*.42,iX=W*.18;
+  const hY=[.2,.4,.6,.8].map(y=>y*H);
+  bpParts=[];
+  hY.forEach((hy,j)=>{for(let k=0;k<2;k++)bpParts.push(new BPP(oX,H/2,hX,hy,k*3));});
+  [.25,.5,.75].map(y=>y*H).forEach((iy,i)=>hY.forEach((hy,j)=>bpParts.push(new BPP(hX,hy,iX,iy,8+j*2))));
+  bpParts.forEach(p=>p.spd=.04*spd);
+  const anim=()=>{
+    drawBP(true);
+    if(!bpParts.every(p=>p.done)){bpAnim=requestAnimationFrame(anim);}
+    else{setTimeout(()=>runEp(),spd>=2?20:80);}
+  };
+  bpAnim=requestAnimationFrame(anim);
+}
+
+function drawBP(bp=false){
+  const W=bpC.width,H=bpC.height; bpX.clearRect(0,0,W,H);
+  const r=Math.min(W,H)*.046;
+  const lx={i:.18,h:.42,o:.75};
+  const iY=[.25,.5,.75].map(y=>y*H),hY=[.2,.4,.6,.8].map(y=>y*H),oY=H*.5;
+  iY.forEach((iy,i)=>hY.forEach((hy,j)=>drawEdge(bpX,lx.i*W,iy,lx.h*W,hy,nn.w1[i][j],bp,.2)));
+  hY.forEach((hy,j)=>drawEdge(bpX,lx.h*W,hy,lx.o*W,oY,nn.w2[j],bp,.25));
+  if(bp)bpParts.forEach(p=>{p.step();p.draw(bpX);});
+  const[mar,jun,sep]=getSliders();
+  ['3월','6월','9월'].forEach((lb,i)=>drawNode(bpX,lx.i*W,iY[i],r,lb,[mar,jun,sep][i]+'점','#00f2ff',true));
+  ['H1','H2','H3','H4'].forEach((lb,j)=>drawNode(bpX,lx.h*W,hY[j],r,lb,nn.a1[j].toFixed(2),'#7000ff'));
+  const oc=trained?'#39ff14':'#00f2ff';
+  drawNode(bpX,lx.o*W,oY,r*1.2,'출력',Math.round(nn.a2*100)+'점',oc,true);
+  // 목표 라인
+  bpX.save();
+  bpX.strokeStyle='rgba(255,221,0,0.22)';bpX.lineWidth=1;bpX.setLineDash([4,5]);
+  const ty=oY-((tgtScore-50)/100)*H*.28;
+  bpX.beginPath();bpX.moveTo(lx.o*W,ty);bpX.lineTo(W-14,ty);bpX.stroke();
+  bpX.fillStyle='#ffdd0066';bpX.font='10px Share Tech Mono';bpX.textAlign='left';
+  bpX.fillText('목표 '+tgtScore+'점',lx.o*W+8,ty-5);bpX.restore();
+}
+
+/* ══════════════════════════════════════════
+   초기화
+══════════════════════════════════════════ */
+window.addEventListener('resize',()=>{
+  if(cur===1)resizeNN();
+  if(cur===2)initP2();
+  if(cur===3)initP3();
+});
+
+setTimeout(()=>{
+  $('loading').classList.add('hide');
+  resizeNN(); updatePred(); mainLoop();
+  setTimeout(()=>$('loading').remove(),700);
+},1300);
+</script>
+</body>
+</html>
